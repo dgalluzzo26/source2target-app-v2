@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { AuthAPI, handleApiError } from '@/services/api'
+// import { AuthAPI, handleApiError } from '@/services/api' // Disabled for frontend-only deployment
 
 export interface User {
   id: number
@@ -27,46 +27,31 @@ export const useUserStore = defineStore('user', () => {
     loading.value = true
     error.value = null
     
+    // Frontend-only mode: Use dummy user data
     try {
-      // Try to get current user from backend (like original app's AuthManager.get_current_user())
-      const response = await AuthAPI.getCurrentUser()
-      currentUser.value = response
-      return { success: true }
-    } catch (apiError: any) {
-      console.warn('Failed to get current user from Databricks context:', apiError)
-      
-      // Set a default user if we can't detect from Databricks context (for development)
       currentUser.value = {
         id: 1,
-        email: 'user@gainwell.com',
-        display_name: 'Current User',
+        email: 'demo.user@gainwell.com',
+        display_name: 'Demo User',
         role: 'platform_user',
         is_admin: false,
         is_platform_user: true,
         is_active: true,
         date_joined: new Date().toISOString()
       }
-      
-      error.value = 'Using default user - Databricks authentication not available'
-      return { success: false, error: error.value }
+      console.log('Frontend-only mode: User initialized with dummy data')
+      return { success: true }
+    } catch (error) {
+      console.error('Error initializing dummy user:', error)
+      return { success: false, error: 'Failed to initialize user' }
     } finally {
       loading.value = false
     }
   }
 
   const refreshProfile = async () => {
-    if (!isAuthenticated.value) return
-    
-    try {
-      const updatedUser = await AuthAPI.getProfile()
-      if (updatedUser) {
-        currentUser.value = updatedUser
-      }
-    } catch (apiError: any) {
-      console.warn('Failed to refresh user profile:', apiError)
-      // Fallback to getting current user from Databricks context
-      await getCurrentUser()
-    }
+    // Frontend-only mode: No profile refresh needed
+    console.log('Frontend-only mode: Profile refresh skipped')
   }
 
   const initializeAuth = async () => {

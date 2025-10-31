@@ -9,8 +9,10 @@
  */
 
 import axios from 'axios'
+import APP_CONFIG from '@/config/app'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+// Frontend-only mode: Disable all API calls
+const API_BASE_URL = APP_CONFIG.FRONTEND_ONLY ? '' : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api')
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -72,9 +74,18 @@ apiClient.interceptors.response.use(
   }
 )
 
+// Frontend-only mode check
+const checkFrontendOnly = () => {
+  if (APP_CONFIG.FRONTEND_ONLY) {
+    console.warn('Frontend-only mode: API call blocked')
+    throw new Error('API calls disabled in frontend-only mode')
+  }
+}
+
 // API Service Classes
 export class AuthAPI {
   static async login(email: string, password: string) {
+    checkFrontendOnly()
     const response = await apiClient.post('/accounts/auth/login/', {
       email,
       password
@@ -121,6 +132,7 @@ export class AuthAPI {
   }
 
   static async getCurrentUser() {
+    checkFrontendOnly()
     // Get current user from Databricks context (like original app's AuthManager.get_current_user())
     const response = await apiClient.get('/accounts/current-user/')
     return response.data

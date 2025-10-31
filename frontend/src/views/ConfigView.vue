@@ -393,7 +393,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { ConfigurationAPI, handleApiError } from '@/services/api'
+// import { ConfigurationAPI, handleApiError } from '@/services/api' // Disabled for frontend-only deployment
 
 const userStore = useUserStore()
 
@@ -456,67 +456,45 @@ const loading = ref({
   reset: false
 })
 
-// Methods
+// Methods (Frontend-only mode)
 const loadConfiguration = async () => {
-  try {
-    const fullConfig = await ConfigurationAPI.getFullConfiguration()
-    config.value = fullConfig
-    console.log('Configuration loaded:', fullConfig)
-  } catch (error) {
-    const errorInfo = handleApiError(error)
-    console.error('Failed to load configuration:', errorInfo.error)
-  }
+  // Frontend-only mode: Configuration already loaded as dummy data
+  console.log('Frontend-only mode: Configuration loaded from dummy data')
 }
 
 const testDatabaseConnection = async () => {
   loading.value.testConnection = true
-  try {
-    const result = await ConfigurationAPI.testConfiguration('database', config.value.database)
-    console.log('Database connection test result:', result)
-    // TODO: Show success/error toast notification
-  } catch (error) {
-    const errorInfo = handleApiError(error)
-    console.error('Database connection test failed:', errorInfo.error)
-    // TODO: Show error toast notification
-  } finally {
+  // Frontend-only mode: Simulate connection test
+  setTimeout(() => {
+    console.log('Frontend-only mode: Database connection test simulated - SUCCESS')
     loading.value.testConnection = false
-  }
+  }, 2000)
 }
 
 const testVectorSearch = async () => {
   loading.value.testVectorSearch = true
-  try {
-    const result = await ConfigurationAPI.testConfiguration('vector_search', config.value.vector_search)
-    console.log('Vector search test result:', result)
-    // TODO: Show success/error toast notification
-  } catch (error) {
-    const errorInfo = handleApiError(error)
-    console.error('Vector search test failed:', errorInfo.error)
-    // TODO: Show error toast notification
-  } finally {
+  // Frontend-only mode: Simulate vector search test
+  setTimeout(() => {
+    console.log('Frontend-only mode: Vector search test simulated - SUCCESS')
     loading.value.testVectorSearch = false
-  }
+  }, 2000)
 }
 
 const saveConfiguration = async () => {
   loading.value.save = true
-  try {
-    await ConfigurationAPI.bulkUpdateConfiguration(config.value, 'Configuration updated via UI')
-    console.log('Configuration saved successfully')
-    // TODO: Show success toast notification
-  } catch (error) {
-    const errorInfo = handleApiError(error)
-    console.error('Failed to save configuration:', errorInfo.error)
-    // TODO: Show error toast notification
-  } finally {
+  // Frontend-only mode: Simulate save
+  setTimeout(() => {
+    console.log('Frontend-only mode: Configuration saved (simulated)')
     loading.value.save = false
-  }
+  }, 1000)
 }
 
 const exportConfiguration = async () => {
   loading.value.export = true
   try {
-    const blob = await ConfigurationAPI.exportConfiguration()
+    // Frontend-only mode: Export current config as JSON
+    const configJson = JSON.stringify(config.value, null, 2)
+    const blob = new Blob([configJson], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -525,12 +503,9 @@ const exportConfiguration = async () => {
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
-    console.log('Configuration exported successfully')
-    // TODO: Show success toast notification
+    console.log('Frontend-only mode: Configuration exported')
   } catch (error) {
-    const errorInfo = handleApiError(error)
-    console.error('Failed to export configuration:', errorInfo.error)
-    // TODO: Show error toast notification
+    console.error('Failed to export configuration:', error)
   } finally {
     loading.value.export = false
   }
@@ -540,17 +515,13 @@ const importConfiguration = (event: any) => {
   const file = event.files[0]
   if (file) {
     const reader = new FileReader()
-    reader.onload = async (e) => {
+    reader.onload = (e) => {
       try {
         const importedConfig = JSON.parse(e.target?.result as string)
-        await ConfigurationAPI.importConfiguration(importedConfig, 'merge', 'Configuration imported via UI')
-        await loadConfiguration() // Reload configuration from server
-        console.log('Configuration imported successfully')
-        // TODO: Show success toast notification
+        config.value = { ...config.value, ...importedConfig }
+        console.log('Frontend-only mode: Configuration imported')
       } catch (error) {
-        const errorInfo = handleApiError(error)
-        console.error('Failed to import configuration:', errorInfo.error)
-        // TODO: Show error toast notification
+        console.error('Failed to import configuration:', error)
       }
     }
     reader.readAsText(file)
@@ -559,18 +530,42 @@ const importConfiguration = (event: any) => {
 
 const resetConfiguration = async () => {
   loading.value.reset = true
-  try {
-    await ConfigurationAPI.resetToDefaults()
-    await loadConfiguration() // Reload configuration from server
-    console.log('Configuration reset to defaults successfully')
-    // TODO: Show success toast notification
-  } catch (error) {
-    const errorInfo = handleApiError(error)
-    console.error('Failed to reset configuration:', errorInfo.error)
-    // TODO: Show error toast notification
-  } finally {
+  // Frontend-only mode: Reset to default values
+  setTimeout(() => {
+    config.value = {
+      database: {
+        warehouse_name: 'gia-oztest-dev-data-warehouse',
+        mapping_table: 'oztest_dev.source_to_target.mappings',
+        semantic_table: 'oztest_dev.source_to_target.silver_semantic_full',
+        server_hostname: 'Acuity-oz-test-ue1.cloud.databricks.com',
+        http_path: '/sql/1.0/warehouses/173ea239ed13be7d'
+      },
+      ai_model: {
+        previous_mappings_table_name: 'oztest_dev.source_to_target.train_with_comments',
+        foundation_model_endpoint: 'databricks-meta-llama-3-3-70b-instruct',
+        default_prompt: config.value.ai_model.default_prompt // Keep the long prompt
+      },
+      ui: {
+        app_title: 'Source-to-Target Mapping Platform',
+        theme_color: '#4a5568',
+        sidebar_expanded: true
+      },
+      support: {
+        support_url: 'https://mygainwell.sharepoint.com'
+      },
+      vector_search: {
+        index_name: 'oztest_dev.source_to_target.silver_semantic_full_vs',
+        endpoint_name: 's2t_vsendpoint'
+      },
+      security: {
+        admin_group_name: 'gia-oztest-dev-ue1-data-engineers',
+        enable_password_auth: true,
+        admin_password_hash: ''
+      }
+    }
+    console.log('Frontend-only mode: Configuration reset to defaults')
     loading.value.reset = false
-  }
+  }, 1000)
 }
 
 onMounted(() => {
