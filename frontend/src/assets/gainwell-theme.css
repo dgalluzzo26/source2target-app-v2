@@ -32,6 +32,38 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: var(--gainwell-text-primary);
   background-color: var(--gainwell-bg-secondary);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ensure full width for all containers */
+* {
+  box-sizing: border-box;
+}
+
+#app {
+  width: 100% !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+}
+
+/* Override any PrimeVue container constraints */
+.p-component {
+  max-width: none !important;
+}
+
+/* Ensure DataTables and other components use full width */
+.p-datatable {
+  width: 100% !important;
+}
+
+.p-datatable-wrapper {
+  width: 100% !important;
 }
 
 /* Global Button Styling with Gainwell Colors */

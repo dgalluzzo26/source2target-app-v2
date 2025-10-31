@@ -222,12 +222,15 @@ onMounted(() => {
   margin-left: 16rem;
   margin-top: 4rem;
   min-height: calc(100vh - 4rem);
+  width: calc(100% - 16rem);
 }
 
 .layout-main {
   padding: 2rem;
   background: #f8f9fa;
   min-height: calc(100vh - 4rem);
+  width: 100%;
+  max-width: none;
 }
 
 /* Badge Styling with Gainwell Colors */
@@ -256,6 +259,7 @@ onMounted(() => {
   
   .layout-main-container {
     margin-left: 0;
+    width: 100%;
   }
   
   .layout-topbar {
