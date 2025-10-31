@@ -8,14 +8,11 @@
  * - Error handling and response transformation
  */
 
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
-import { useUserStore } from '@/stores/user'
+import axios from 'axios'
 
-// API Configuration
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
 
-// Create axios instance
-const apiClient: AxiosInstance = axios.create({
+const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {
@@ -39,10 +36,10 @@ apiClient.interceptors.request.use(
 
 // Response interceptor for token refresh and error handling
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
+  (response) => {
     return response
   },
-  async (error: AxiosError) => {
+  async (error) => {
     const original = error.config
 
     if (error.response?.status === 401 && original && !original._retry) {
@@ -51,7 +48,7 @@ apiClient.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem('refresh_token')
         if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/accounts/auth/refresh/`, {
+          const response = await axios.post(`${API_BASE_URL}/accounts/auth/token/refresh/`, {
             refresh: refreshToken
           })
 
@@ -64,8 +61,9 @@ apiClient.interceptors.response.use(
         }
       } catch (refreshError) {
         // Refresh failed, logout user
-        const userStore = useUserStore()
-        userStore.logout()
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        localStorage.removeItem('user')
         window.location.href = '/login'
       }
     }
@@ -119,6 +117,12 @@ export class AuthAPI {
     phone_number?: string
   }) {
     const response = await apiClient.post('/accounts/auth/register/', userData)
+    return response.data
+  }
+
+  static async getCurrentUser() {
+    // Get current user from Databricks context (like original app's AuthManager.get_current_user())
+    const response = await apiClient.get('/accounts/current-user/')
     return response.data
   }
 

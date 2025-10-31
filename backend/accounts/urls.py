@@ -18,6 +18,7 @@ from .views import (
     UserPreferencesView,
     UserAdminViewSet,
     system_status,
+    current_user
 )
 
 # Create a router for viewsets
@@ -34,6 +35,7 @@ urlpatterns = [
     path('auth/register/', UserRegistrationView.as_view(), name='register'),
     
     # User profile endpoints
+    path('current-user/', current_user, name='current_user'),
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('password/change/', PasswordChangeView.as_view(), name='password_change'),
     path('preferences/', UserPreferencesView.as_view(), name='preferences'),

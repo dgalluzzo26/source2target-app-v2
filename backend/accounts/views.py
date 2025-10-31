@@ -33,6 +33,17 @@ from .serializers import (
 )
 from .permissions import IsAdminUser, IsOwnerOrAdmin
 
+# Import Databricks SDK for user detection (like original app)
+try:
+    from databricks.sdk import WorkspaceClient
+    from databricks.sdk.core import Config
+    DATABRICKS_AVAILABLE = True
+except ImportError:
+    DATABRICKS_AVAILABLE = False
+
+import logging
+logger = logging.getLogger(__name__)
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     """
@@ -332,3 +343,93 @@ def system_status(request):
             "version": "2.0.0",
         }
     })
+
+
+def get_current_user_from_databricks():
+    """
+    Get current user from Databricks context (like original app's AuthManager.get_current_user()).
+    
+    This function attempts multiple approaches to identify the current user,
+    prioritizing the most reliable methods for different deployment scenarios.
+    """
+    if not DATABRICKS_AVAILABLE:
+        return None
+    
+    try:
+        # Try to get user from Databricks WorkspaceClient
+        w = WorkspaceClient()
+        current_user = w.current_user.me()
+        
+        if current_user and hasattr(current_user, 'user_name'):
+            return current_user.user_name
+        elif current_user and hasattr(current_user, 'emails') and current_user.emails:
+            return current_user.emails[0].value
+            
+    except Exception as e:
+        logger.warning(f"Failed to get user from WorkspaceClient: {e}")
+    
+    try:
+        # Try to get user from Databricks Config
+        cfg = Config()
+        if hasattr(cfg, 'username') and cfg.username:
+            return cfg.username
+    except Exception as e:
+        logger.warning(f"Failed to get user from Config: {e}")
+    
+    return None
+
+
+@extend_schema(
+    summary="Get current user from Databricks context",
+    description="Automatically detect current user from Databricks authentication context (like original Streamlit app)",
+    responses={200: UserProfileSerializer}
+)
+@api_view(['GET'])
+@permission_classes([AllowAny])  # No authentication required - we detect user from Databricks context
+def current_user(request):
+    """
+    Get current user from Databricks context (like original app).
+    
+    This endpoint mimics the original Streamlit app's AuthManager.get_current_user() functionality
+    by automatically detecting the user from the Databricks authentication context.
+    """
+    try:
+        # Try to get user email from Databricks context
+        user_email = get_current_user_from_databricks()
+        
+        if user_email:
+            # Try to find existing user
+            try:
+                user = User.objects.get(email=user_email)
+                serializer = UserProfileSerializer(user)
+                return Response(serializer.data)
+            except User.DoesNotExist:
+                # Create new user if not exists (like original app would do)
+                user = User.objects.create_user(
+                    email=user_email,
+                    username=user_email.split('@')[0],
+                    display_name=user_email.split('@')[0].replace('.', ' ').title(),
+                    role=User.Role.PLATFORM_USER,
+                    is_platform_user=True
+                )
+                serializer = UserProfileSerializer(user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            # Fallback: return a default user for development
+            return Response({
+                "id": 1,
+                "email": "user@gainwell.com",
+                "display_name": "Current User",
+                "role": "platform_user",
+                "is_admin": False,
+                "is_platform_user": True,
+                "is_active": True,
+                "date_joined": timezone.now().isoformat()
+            })
+            
+    except Exception as e:
+        logger.error(f"Error getting current user: {e}")
+        return Response(
+            {"error": "Failed to detect current user from Databricks context"}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

@@ -5,20 +5,13 @@ import { AuthAPI, handleApiError } from '@/services/api'
 export interface User {
   id: number
   email: string
-  username: string
-  full_name: string
   display_name: string
-  organization?: string
-  department?: string
-  phone_number?: string
-  role: 'admin' | 'user' | 'viewer'
+  role: 'admin' | 'platform_user' | 'user'
   is_admin: boolean
   is_platform_user: boolean
   is_active: boolean
   last_login?: string
   date_joined: string
-  created_at: string
-  updated_at: string
 }
 
 export const useUserStore = defineStore('user', () => {
@@ -30,122 +23,32 @@ export const useUserStore = defineStore('user', () => {
   const isAdmin = computed(() => currentUser.value?.is_admin || false)
   const isPlatformUser = computed(() => currentUser.value?.is_platform_user || false)
 
-  const login = async (email: string, password: string) => {
+  const getCurrentUser = async () => {
     loading.value = true
     error.value = null
     
     try {
-      const response = await AuthAPI.login(email, password)
-      
-      if (response.success && response.user) {
-        currentUser.value = response.user
-        
-        // Store user data for persistence (tokens are handled by API service)
-        localStorage.setItem('user', JSON.stringify(response.user))
-        
-        return { success: true }
-      }
-      
-      return { success: false, error: 'Login failed' }
-    } catch (apiError: any) {
-      const errorInfo = handleApiError(apiError)
-      error.value = errorInfo.error
-      return { success: false, error: errorInfo.error }
-    } finally {
-      loading.value = false
-    }
-  }
-
-  const logout = async () => {
-    loading.value = true
-    
-    try {
-      await AuthAPI.logout()
-    } catch (error) {
-      console.warn('Logout API call failed:', error)
-    }
-    
-    // Clear user data regardless of API response
-    currentUser.value = null
-    error.value = null
-    localStorage.removeItem('user')
-    
-    loading.value = false
-  }
-
-  const register = async (userData: {
-    email: string
-    username: string
-    password: string
-    password_confirm: string
-    full_name?: string
-    organization?: string
-    department?: string
-    phone_number?: string
-  }) => {
-    loading.value = true
-    error.value = null
-    
-    try {
-      const response = await AuthAPI.register(userData)
-      
-      if (response.user) {
-        // Auto-login after successful registration
-        return await login(userData.email, userData.password)
-      }
-      
-      return { success: true, message: 'Registration successful' }
-    } catch (apiError: any) {
-      const errorInfo = handleApiError(apiError)
-      error.value = errorInfo.error
-      return { success: false, error: errorInfo.error }
-    } finally {
-      loading.value = false
-    }
-  }
-
-  const updateProfile = async (userData: {
-    full_name?: string
-    organization?: string
-    department?: string
-    phone_number?: string
-  }) => {
-    loading.value = true
-    error.value = null
-    
-    try {
-      const updatedUser = await AuthAPI.updateProfile(userData)
-      
-      if (updatedUser) {
-        currentUser.value = updatedUser
-        localStorage.setItem('user', JSON.stringify(updatedUser))
-      }
-      
+      // Try to get current user from backend (like original app's AuthManager.get_current_user())
+      const response = await AuthAPI.getCurrentUser()
+      currentUser.value = response
       return { success: true }
     } catch (apiError: any) {
-      const errorInfo = handleApiError(apiError)
-      error.value = errorInfo.error
-      return { success: false, error: errorInfo.error }
-    } finally {
-      loading.value = false
-    }
-  }
-
-  const changePassword = async (passwordData: {
-    old_password: string
-    new_password: string
-    new_password_confirm: string
-  }) => {
-    loading.value = true
-    error.value = null
-    
-    try {
-      await AuthAPI.changePassword(passwordData)
-      return { success: true, message: 'Password changed successfully' }
-    } catch (apiError: any) {
-      const errorInfo = handleApiError(apiError)
-      error.value = errorInfo.error
-      return { success: false, error: errorInfo.error }
+      console.warn('Failed to get current user from Databricks context:', apiError)
+      
+      // Set a default user if we can't detect from Databricks context (for development)
+      currentUser.value = {
+        id: 1,
+        email: 'user@gainwell.com',
+        display_name: 'Current User',
+        role: 'platform_user',
+        is_admin: false,
+        is_platform_user: true,
+        is_active: true,
+        date_joined: new Date().toISOString()
+      }
+      
+      error.value = 'Using default user - Databricks authentication not available'
+      return { success: false, error: error.value }
     } finally {
       loading.value = false
     }
@@ -156,36 +59,19 @@ export const useUserStore = defineStore('user', () => {
     
     try {
       const updatedUser = await AuthAPI.getProfile()
-      
       if (updatedUser) {
         currentUser.value = updatedUser
-        localStorage.setItem('user', JSON.stringify(updatedUser))
       }
     } catch (apiError: any) {
       console.warn('Failed to refresh user profile:', apiError)
-      // Don't set error state for background refresh failures
+      // Fallback to getting current user from Databricks context
+      await getCurrentUser()
     }
   }
 
-  const initializeAuth = () => {
-    // Check if user data exists in localStorage
-    const storedUser = localStorage.getItem('user')
-    const accessToken = localStorage.getItem('access_token')
-    
-    if (storedUser && accessToken) {
-      try {
-        const user = JSON.parse(storedUser)
-        currentUser.value = user
-        
-        // Optionally refresh user data from server
-        refreshProfile()
-      } catch (error) {
-        console.error('Failed to parse stored user:', error)
-        localStorage.removeItem('user')
-        localStorage.removeItem('access_token')
-        localStorage.removeItem('refresh_token')
-      }
-    }
+  const initializeAuth = async () => {
+    // Automatically detect user from Databricks context (like original app)
+    await getCurrentUser()
   }
 
   const clearError = () => {
@@ -204,14 +90,9 @@ export const useUserStore = defineStore('user', () => {
     isPlatformUser,
     
     // Actions
-    login,
-    logout,
-    register,
-    updateProfile,
-    changePassword,
+    getCurrentUser,
     refreshProfile,
     initializeAuth,
     clearError
   }
 })
-

@@ -44,3 +44,464 @@ ERROR 2025-10-31 00:35:25,017 databricks_service 37139 8539578688 Failed to init
 WARNING 2025-10-31 00:35:25,017 databricks_service 37139 8539578688 Databricks integration will not be available
 ERROR 2025-10-31 00:35:30,288 databricks_service 37153 8539578688 Failed to initialize Databricks clients: default auth: cannot configure default credentials, please check https://docs.databricks.com/en/dev-tools/auth.html#databricks-client-unified-authentication to configure credentials for your preferred authentication method. Config: host=https://Acuity-oz-test-ue1.cloud.databricks.com
 WARNING 2025-10-31 00:35:30,288 databricks_service 37153 8539578688 Databricks integration will not be available
+INFO 2025-10-31 00:36:05,244 autoreload 37287 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:36:05,757 databricks_service 37287 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 00:36:16,333 autoreload 37139 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:36:16,692 autoreload 37295 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:36:17,226 databricks_service 37295 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 00:39:48,493 basehttp 37295 6167146496 "GET /api/docs/swagger/ HTTP/1.1" 200 4675
+INFO 2025-10-31 00:39:48,948 basehttp 37295 6167146496 "GET /api/docs/schema/ HTTP/1.1" 200 218065
+INFO 2025-10-31 00:42:02,730 basehttp 37295 6167146496 "OPTIONS /api/accounts/auth/login/ HTTP/1.1" 200 0
+ERROR 2025-10-31 00:42:02,754 log 37295 6167146496 Internal Server Error: /api/accounts/auth/login/
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: auth_user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/views.py", line 44, in post
+    response = super().post(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework_simplejwt/views.py", line 46, in post
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/serializers.py", line 36, in validate
+    user = User.objects.get(email=email)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 629, in get
+    num = len(clone)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: auth_user
+ERROR 2025-10-31 00:42:02,757 basehttp 37295 6167146496 "POST /api/accounts/auth/login/ HTTP/1.1" 500 195633
+ERROR 2025-10-31 00:42:12,609 log 37295 6167146496 Internal Server Error: /api/accounts/auth/login/
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: auth_user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/views.py", line 44, in post
+    response = super().post(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework_simplejwt/views.py", line 46, in post
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/serializers.py", line 36, in validate
+    user = User.objects.get(email=email)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 629, in get
+    num = len(clone)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: auth_user
+ERROR 2025-10-31 00:42:12,611 basehttp 37295 6167146496 "POST /api/accounts/auth/login/ HTTP/1.1" 500 195633
+ERROR 2025-10-31 00:42:20,522 log 37295 6167146496 Internal Server Error: /api/accounts/auth/login/
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: auth_user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/views.py", line 44, in post
+    response = super().post(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework_simplejwt/views.py", line 46, in post
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/serializers.py", line 36, in validate
+    user = User.objects.get(email=email)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 629, in get
+    num = len(clone)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: auth_user
+ERROR 2025-10-31 00:42:20,524 basehttp 37295 6167146496 "POST /api/accounts/auth/login/ HTTP/1.1" 500 195614
+ERROR 2025-10-31 00:42:21,860 log 37295 6167146496 Internal Server Error: /api/accounts/auth/login/
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: auth_user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/views.py", line 44, in post
+    response = super().post(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework_simplejwt/views.py", line 46, in post
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/serializers.py", line 36, in validate
+    user = User.objects.get(email=email)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 629, in get
+    num = len(clone)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: auth_user
+ERROR 2025-10-31 00:42:21,863 basehttp 37295 6167146496 "POST /api/accounts/auth/login/ HTTP/1.1" 500 195614
+ERROR 2025-10-31 00:43:53,794 log 37295 6167146496 Internal Server Error: /api/accounts/auth/login/
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: auth_user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/views.py", line 44, in post
+    response = super().post(request, *args, **kwargs)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework_simplejwt/views.py", line 46, in post
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+  File "/Users/david.galluzzo/source2target-app-v2/backend/accounts/serializers.py", line 36, in validate
+    user = User.objects.get(email=email)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 629, in get
+    num = len(clone)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: auth_user
+ERROR 2025-10-31 00:43:53,796 basehttp 37295 6167146496 "POST /api/accounts/auth/login/ HTTP/1.1" 500 195633
+WARNING 2025-10-31 00:45:34,095 log 37295 13304360960 Unauthorized: /api/mapping/source-tables/
+WARNING 2025-10-31 00:45:34,095 basehttp 37295 13304360960 "GET /api/mapping/source-tables/?analysis_status=completed HTTP/1.1" 401 58
+INFO 2025-10-31 00:48:01,175 autoreload 37295 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/accounts/views.py changed, reloading.
+INFO 2025-10-31 00:48:01,636 autoreload 38127 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:48:02,196 databricks_service 38127 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 00:48:21,158 autoreload 38127 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/accounts/views.py changed, reloading.
+INFO 2025-10-31 00:48:21,623 autoreload 38139 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:48:22,200 databricks_service 38139 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 00:48:34,863 autoreload 38139 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/accounts/urls.py changed, reloading.
+INFO 2025-10-31 00:48:35,303 autoreload 38148 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:48:35,885 databricks_service 38148 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 00:48:46,433 autoreload 38148 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/accounts/urls.py changed, reloading.
+INFO 2025-10-31 00:48:46,842 autoreload 38192 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:48:47,435 databricks_service 38192 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 00:49:31,186 databricks_service 38515 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 00:50:14,829 config 38192 6128398336 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:50:15,787 views 38192 6128398336 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:50:15,787 log 38192 6128398336 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:50:15,787 basehttp 38192 6128398336 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:50:55,173 config 38192 6128398336 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:50:55,754 views 38192 6128398336 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:50:55,755 log 38192 6128398336 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:50:55,755 basehttp 38192 6128398336 "GET /api/accounts/current-user/ HTTP/1.1" 500 65

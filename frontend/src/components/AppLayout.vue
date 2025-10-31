@@ -10,17 +10,11 @@
       <div class="layout-topbar-menu">
         <div class="user-info">
           <i class="pi pi-user"></i>
-          <span>{{ userStore.currentUser?.name || 'User' }}</span>
+          <span>{{ userStore.currentUser?.display_name || userStore.currentUser?.email || 'Loading...' }}</span>
           <Badge v-if="userStore.isAdmin" value="Admin" severity="info" />
+          <Badge v-else-if="userStore.isPlatformUser" value="Platform User" severity="success" />
           <Badge v-else value="User" severity="secondary" />
         </div>
-        <Button 
-          icon="pi pi-sign-out" 
-          severity="secondary" 
-          text 
-          @click="logout"
-          v-tooltip="'Logout'"
-        />
       </div>
     </div>
 
@@ -66,16 +60,15 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
-const router = useRouter()
 
-const logout = () => {
-  userStore.logout()
-  router.push('/login')
-}
+// Automatically initialize user on app load (like original app)
+onMounted(() => {
+  userStore.initializeAuth()
+})
 </script>
 
 <style scoped>
