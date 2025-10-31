@@ -20,8 +20,8 @@ const router = createRouter({
           path: '',
           name: 'introduction',
           component: () => import('../views/IntroductionView.vue')
-        },
-        {
+    },
+    {
           path: '/mapping',
           name: 'mapping',
           component: () => import('../views/MappingView.vue')

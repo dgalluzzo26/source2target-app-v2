@@ -24,12 +24,14 @@ A modern Vue.js + Django implementation of the Gainwell Source-to-Target mapping
 - **Axios** - HTTP client
 - **Vite** - Fast build tool
 
-### Backend (Coming Soon)
-- **Django 4.2** - Python web framework
+### Backend
+- **Django 5.2** - Python web framework
 - **Django REST Framework** - API development
-- **Databricks SDK** - Data platform integration
 - **JWT Authentication** - Secure token-based auth
+- **Databricks SDK** - Data platform integration
 - **Celery** - Background task processing
+- **Redis** - Caching and task queue
+- **drf-spectacular** - API documentation
 
 ## 🏃‍♂️ Quick Start
 
@@ -56,10 +58,51 @@ A modern Vue.js + Django implementation of the Gainwell Source-to-Target mapping
    http://localhost:5173
    ```
 
+### Backend Development
+
+1. **Create virtual environment**
+   ```bash
+   cd source2target-app-v2
+   python3 -m venv backend_env
+   source backend_env/bin/activate  # On Windows: backend_env\Scripts\activate
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Configure environment**
+   ```bash
+   cp env.template .env
+   # Edit .env file with your settings
+   ```
+
+4. **Run migrations**
+   ```bash
+   python manage.py migrate
+   ```
+
+5. **Create superuser**
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+6. **Start development server**
+   ```bash
+   python manage.py runserver
+   ```
+
+7. **Access API documentation**
+   ```
+   http://localhost:8000/api/docs/swagger/
+   ```
+
 ### Demo Credentials
 
-- **Admin User**: `admin@gainwell.com` (any password)
-- **Regular User**: `user@gainwell.com` (any password)
+- **API Admin**: `admin@gainwell.com` / `admin123`
+- **Frontend**: `admin@gainwell.com` (any password)
+- **Frontend**: `user@gainwell.com` (any password)
 
 ## 📁 Project Structure
 
@@ -74,7 +117,13 @@ source2target-app-v2/
 │   │   └── assets/          # Static assets
 │   ├── package.json
 │   └── vite.config.ts
-├── backend/                  # Django API (coming soon)
+├── backend/                  # Django project configuration
+├── accounts/                 # User authentication & management
+├── mapping/                  # Field mapping functionality
+├── config_manager/           # Configuration management
+├── manage.py                 # Django management script
+├── requirements.txt          # Python dependencies
+├── env.template             # Environment configuration template
 └── README.md
 ```
 
@@ -108,27 +157,30 @@ The application uses PrimeVue components for a professional look and feel:
 ## 🚧 Development Status
 
 ### ✅ Completed
-- [x] Vue 3 + TypeScript project setup
-- [x] PrimeVue integration with Aura theme
-- [x] Authentication system with login/logout
+- [x] Vue 3 + TypeScript project setup with PrimeVue
+- [x] Django REST API backend with JWT authentication
+- [x] User authentication system (login/logout/registration)
+- [x] User management and role-based permissions
 - [x] Main layout with navigation and header
 - [x] Introduction page with system status
 - [x] Route protection and navigation guards
+- [x] API documentation with Swagger/ReDoc
 - [x] Responsive design foundation
 
 ### 🔄 In Progress
 - [ ] Field mapping interface with DataTable
 - [ ] Configuration management views
-- [ ] API service layer integration
+- [ ] Databricks SDK integration
+- [ ] AI model and vector search services
 
 ### 📋 Planned
-- [ ] Django REST API backend
-- [ ] Databricks integration
-- [ ] AI mapping suggestions
-- [ ] Template upload/download
+- [ ] AI mapping suggestions with foundation models
+- [ ] Template upload/download functionality
 - [ ] Real-time updates with WebSockets
-- [ ] Advanced filtering and search
-- [ ] Data visualization charts
+- [ ] Advanced filtering and search capabilities
+- [ ] Data visualization charts and dashboards
+- [ ] Background task processing with Celery
+- [ ] Comprehensive error handling and logging
 - [ ] Mobile-optimized interface
 
 ## 🤝 Contributing
@@ -146,3 +198,4 @@ This project is proprietary software developed for Gainwell Technologies.
 ## 📞 Support
 
 For questions or support, please contact the development team.
+

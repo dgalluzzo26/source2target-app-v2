@@ -17,7 +17,7 @@ body {
   font-family: var(--p-font-family);
   background: var(--p-surface-ground);
   color: var(--p-text-color);
-}
+  }
 
 #app {
   min-height: 100vh;

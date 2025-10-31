@@ -61,3 +61,4 @@ export const useUserStore = defineStore('user', () => {
     initializeAuth
   }
 })
+
