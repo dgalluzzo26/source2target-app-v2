@@ -465,7 +465,7 @@
             </template>
           </Dialog>
         </div>
-      </template>
+</template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
