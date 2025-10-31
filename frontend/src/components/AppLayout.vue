@@ -3,8 +3,8 @@
     <!-- Top Header -->
     <div class="layout-topbar">
       <div class="layout-topbar-logo">
-        <img src="/favicon.ico" alt="Logo" class="logo" />
-        <span class="logo-text">Gainwell Source-to-Target Mapping Platform</span>
+        <img src="/gainwell_logo.svg" alt="Gainwell Technologies" class="logo" />
+        <span class="logo-text">Source-to-Target Mapping Platform</span>
       </div>
       
       <div class="layout-topbar-menu">
@@ -72,13 +72,24 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Gainwell Brand Colors - Official Palette */
+:root {
+  --gainwell-primary: #cc1bc6;      /* Magenta/pink */
+  --gainwell-secondary: #00f0b0;    /* Bright teal/green */
+  --gainwell-dark: #1b24a6;         /* Dark blue */
+  --gainwell-light: #ebecf5;        /* Light purple-gray */
+  --gainwell-accent: #cc18c6;       /* Bright magenta/pink */
+}
+
 .layout-wrapper {
   position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* Top Header with Gainwell Gradient */
 .layout-topbar {
   position: fixed;
   top: 0;
@@ -90,9 +101,10 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  background: var(--p-surface-0);
-  border-bottom: 1px solid var(--p-surface-border);
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, var(--gainwell-dark) 0%, var(--gainwell-primary) 100%);
+  border-bottom: 2px solid var(--gainwell-secondary);
+  box-shadow: 0 3px 12px rgba(27, 36, 166, 0.15);
+  color: white;
 }
 
 .layout-topbar-logo {
@@ -102,14 +114,16 @@ onMounted(() => {
 }
 
 .logo {
-  height: 2rem;
-  width: 2rem;
+  height: 2.5rem;
+  width: auto;
+  filter: brightness(0) invert(1); /* Make logo white */
 }
 
 .logo-text {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: var(--p-primary-color);
+  color: white;
+  margin: 0;
 }
 
 .layout-topbar-menu {
@@ -118,15 +132,30 @@ onMounted(() => {
   gap: 1rem;
 }
 
+/* User Info with Gainwell Styling */
 .user-info {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.15);
   padding: 0.5rem 1rem;
-  background: var(--p-surface-50);
-  border-radius: var(--p-border-radius);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+  color: white;
 }
 
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.user-info i {
+  font-size: 1rem;
+  color: var(--gainwell-secondary);
+}
+
+/* Sidebar with Gainwell Light Background */
 .layout-sidebar {
   position: fixed;
   top: 4rem;
@@ -134,8 +163,8 @@ onMounted(() => {
   width: 16rem;
   height: calc(100vh - 4rem);
   z-index: 996;
-  background: var(--p-surface-0);
-  border-right: 1px solid var(--p-surface-border);
+  background: var(--gainwell-light);
+  border-right: 1px solid rgba(204, 27, 198, 0.1);
   overflow-y: auto;
 }
 
@@ -153,35 +182,44 @@ onMounted(() => {
   margin-bottom: 0.5rem;
 }
 
+/* Menu Items with Gainwell Styling */
 .layout-menuitem-link {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  color: var(--p-text-color);
+  color: var(--gainwell-dark);
   text-decoration: none;
-  border-radius: var(--p-border-radius);
-  transition: all 0.2s;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: white;
+  border: 1px solid transparent;
 }
 
 .layout-menuitem-link:hover {
-  background: var(--p-surface-100);
-  color: var(--p-primary-color);
+  background: white;
+  border-color: var(--gainwell-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 240, 176, 0.15);
 }
 
 .layout-menuitem-link.router-link-active {
-  background: var(--p-primary-color);
-  color: var(--p-primary-contrast-color);
+  background: linear-gradient(135deg, var(--gainwell-primary), var(--gainwell-accent));
+  color: white;
+  border-color: var(--gainwell-secondary);
+  box-shadow: 0 4px 12px rgba(204, 27, 198, 0.25);
 }
 
 .layout-menuitem-icon {
   font-size: 1.125rem;
+  color: inherit;
 }
 
 .layout-menuitem-text {
   font-weight: 500;
 }
 
+/* Main Content Area */
 .layout-main-container {
   margin-left: 16rem;
   margin-top: 4rem;
@@ -190,8 +228,28 @@ onMounted(() => {
 
 .layout-main {
   padding: 2rem;
+  background: #f8f9fa;
+  min-height: calc(100vh - 4rem);
 }
 
+/* Badge Styling with Gainwell Colors */
+:deep(.p-badge) {
+  background: var(--gainwell-secondary);
+  color: var(--gainwell-dark);
+  font-weight: 600;
+}
+
+:deep(.p-badge.p-badge-info) {
+  background: var(--gainwell-primary);
+  color: white;
+}
+
+:deep(.p-badge.p-badge-success) {
+  background: var(--gainwell-secondary);
+  color: var(--gainwell-dark);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .layout-sidebar {
     transform: translateX(-100%);
@@ -202,9 +260,43 @@ onMounted(() => {
     margin-left: 0;
   }
   
+  .layout-topbar {
+    padding: 0 1rem;
+  }
+  
   .logo-text {
     display: none;
   }
 }
-</style>
 
+/* Global Gainwell Button Styling */
+:deep(.p-button) {
+  background: linear-gradient(135deg, var(--gainwell-primary), var(--gainwell-accent));
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(204, 27, 198, 0.15);
+}
+
+:deep(.p-button:hover) {
+  background: linear-gradient(135deg, var(--gainwell-dark), var(--gainwell-primary));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 36, 166, 0.25);
+}
+
+:deep(.p-button.p-button-secondary) {
+  background: var(--gainwell-light);
+  color: var(--gainwell-dark);
+}
+
+:deep(.p-button.p-button-info) {
+  background: linear-gradient(135deg, var(--gainwell-secondary), #00d49a);
+  color: var(--gainwell-dark);
+}
+
+:deep(.p-button.p-button-help) {
+  background: linear-gradient(135deg, var(--gainwell-dark), #2d3bc4);
+  color: white;
+}
+</style>

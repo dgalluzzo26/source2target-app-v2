@@ -5,7 +5,7 @@
       <div class="hero-content">
         <h1 class="hero-title">
           <i class="pi pi-sitemap hero-icon"></i>
-          Gainwell Source-to-Target Mapping Platform
+          Source-to-Target Mapping Platform
         </h1>
         <p class="hero-description">
           Streamline your data mapping process with AI-powered field suggestions, 

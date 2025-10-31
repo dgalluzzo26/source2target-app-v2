@@ -505,3 +505,61 @@ INFO 2025-10-31 00:50:55,173 config 38192 6128398336 loading DEFAULT profile fro
 ERROR 2025-10-31 00:50:55,754 views 38192 6128398336 Error getting current user: no such table: auth_user
 ERROR 2025-10-31 00:50:55,755 log 38192 6128398336 Internal Server Error: /api/accounts/current-user/
 ERROR 2025-10-31 00:50:55,755 basehttp 38192 6128398336 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:51:25,097 config 38192 6145798144 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:51:25,625 views 38192 6145798144 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:51:25,625 log 38192 6145798144 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:51:25,625 basehttp 38192 6145798144 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+WARNING 2025-10-31 00:51:33,863 log 38192 6162624512 Unauthorized: /api/mapping/source-tables/test_connection/
+WARNING 2025-10-31 00:51:33,863 basehttp 38192 6162624512 "GET /api/mapping/source-tables/test_connection/ HTTP/1.1" 401 58
+INFO 2025-10-31 00:51:41,550 config 38192 6128398336 loading DEFAULT profile from ~/.databrickscfg: host, token
+INFO 2025-10-31 00:51:41,567 autoreload 38192 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/accounts/urls.py changed, reloading.
+INFO 2025-10-31 00:51:41,974 autoreload 38719 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:51:42,497 databricks_service 38719 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 00:52:37,724 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:52:38,269 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:52:38,270 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:52:38,270 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:52:42,019 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:52:42,634 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:52:42,635 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:52:42,635 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:53:19,856 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:53:20,390 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:53:20,390 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:53:20,390 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:53:34,937 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:53:35,464 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:53:35,465 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:53:35,466 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:55:18,796 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:55:19,371 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:55:19,371 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:55:19,371 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:55:22,412 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:55:22,967 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:55:22,967 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:55:22,968 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:55:42,084 config 38719 6147633152 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:55:42,680 views 38719 6147633152 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:55:42,680 log 38719 6147633152 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:55:42,681 basehttp 38719 6147633152 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:56:18,065 config 38719 6147633152 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:56:18,589 views 38719 6147633152 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:56:18,590 log 38719 6147633152 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:56:18,590 basehttp 38719 6147633152 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:57:11,115 config 38719 6147633152 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:57:11,688 views 38719 6147633152 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:57:11,688 log 38719 6147633152 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:57:11,689 basehttp 38719 6147633152 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:57:35,247 config 38719 6147633152 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:57:35,813 views 38719 6147633152 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:57:35,814 log 38719 6147633152 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:57:35,814 basehttp 38719 6147633152 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:57:40,220 config 38719 6147633152 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:57:40,841 views 38719 6147633152 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:57:40,841 log 38719 6147633152 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:57:40,842 basehttp 38719 6147633152 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 00:58:43,898 config 38719 6147633152 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 00:58:44,470 views 38719 6147633152 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 00:58:44,470 log 38719 6147633152 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 00:58:44,470 basehttp 38719 6147633152 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
