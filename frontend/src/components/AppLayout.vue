@@ -3,7 +3,7 @@
     <!-- Top Header -->
     <div class="layout-topbar">
       <div class="layout-topbar-logo">
-        <img src="/gainwell_logo.svg" alt="Gainwell Technologies" class="logo" />
+        <img src="/gainwell-logo-suite-061720-logosuite-png-gainwell-logo-150-r.png" alt="Gainwell Technologies" class="logo" />
         <span class="logo-text">Source-to-Target Mapping Platform</span>
       </div>
       
@@ -72,13 +72,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Gainwell Brand Colors - Official Palette */
+/* Gainwell Brand Colors - Based on Actual Logo and Original App */
 :root {
-  --gainwell-primary: #cc1bc6;      /* Magenta/pink */
-  --gainwell-secondary: #00f0b0;    /* Bright teal/green */
-  --gainwell-dark: #1b24a6;         /* Dark blue */
-  --gainwell-light: #ebecf5;        /* Light purple-gray */
-  --gainwell-accent: #cc18c6;       /* Bright magenta/pink */
+  --gainwell-primary: #4a5568;      /* Dark slate gray (from original app) */
+  --gainwell-secondary: #38a169;    /* Gainwell green (from logo) */
+  --gainwell-light: #f8f9fa;        /* Light gray background */
+  --gainwell-border: #dee2e6;       /* Light gray borders */
 }
 
 .layout-wrapper {
@@ -89,7 +88,7 @@ onMounted(() => {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Top Header with Gainwell Gradient */
+/* Top Header with Gainwell Styling */
 .layout-topbar {
   position: fixed;
   top: 0;
@@ -101,9 +100,9 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  background: linear-gradient(135deg, var(--gainwell-dark) 0%, var(--gainwell-primary) 100%);
+  background: var(--gainwell-primary);
   border-bottom: 2px solid var(--gainwell-secondary);
-  box-shadow: 0 3px 12px rgba(27, 36, 166, 0.15);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
   color: white;
 }
 
@@ -116,7 +115,6 @@ onMounted(() => {
 .logo {
   height: 2.5rem;
   width: auto;
-  filter: brightness(0) invert(1); /* Make logo white */
 }
 
 .logo-text {
@@ -164,7 +162,7 @@ onMounted(() => {
   height: calc(100vh - 4rem);
   z-index: 996;
   background: var(--gainwell-light);
-  border-right: 1px solid rgba(204, 27, 198, 0.1);
+  border-right: 1px solid var(--gainwell-border);
   overflow-y: auto;
 }
 
@@ -200,14 +198,14 @@ onMounted(() => {
   background: white;
   border-color: var(--gainwell-secondary);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 240, 176, 0.15);
+  box-shadow: 0 4px 12px rgba(56, 161, 105, 0.15);
 }
 
 .layout-menuitem-link.router-link-active {
-  background: linear-gradient(135deg, var(--gainwell-primary), var(--gainwell-accent));
+  background: linear-gradient(135deg, var(--gainwell-primary) 0%, var(--gainwell-secondary) 100%);
   color: white;
-  border-color: var(--gainwell-secondary);
-  box-shadow: 0 4px 12px rgba(204, 27, 198, 0.25);
+  border-left: 4px solid var(--gainwell-secondary);
+  box-shadow: 0 4px 12px rgba(56, 161, 105, 0.25);
 }
 
 .layout-menuitem-icon {

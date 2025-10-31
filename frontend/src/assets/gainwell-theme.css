@@ -3,28 +3,28 @@
  * Official color palette and styling for Source-to-Target Mapping Platform
  */
 
-/* Gainwell Brand Colors - Official Palette */
+/* Gainwell Brand Colors - Based on Actual Logo and Original App */
 :root {
-  --gainwell-primary: #cc1bc6;      /* Magenta/pink */
-  --gainwell-secondary: #00f0b0;    /* Bright teal/green */
-  --gainwell-dark: #1b24a6;         /* Dark blue */
-  --gainwell-light: #ebecf5;        /* Light purple-gray */
-  --gainwell-accent: #cc18c6;       /* Bright magenta/pink */
+  --gainwell-primary: #4a5568;      /* Dark slate gray (from original app) */
+  --gainwell-secondary: #38a169;    /* Gainwell green (from logo) */
+  --gainwell-light: #f8f9fa;        /* Light gray background */
+  --gainwell-border: #dee2e6;       /* Light gray borders */
+  --gainwell-muted: #6c757d;        /* Muted text color */
   
   /* Text Colors */
-  --gainwell-text-primary: #1b24a6;
-  --gainwell-text-secondary: #4a5568;
-  --gainwell-text-muted: #6c757d;
+  --gainwell-text-primary: #4a5568;
+  --gainwell-text-secondary: #6c757d;
+  --gainwell-text-muted: #adb5bd;
   
   /* Background Colors */
   --gainwell-bg-primary: #ffffff;
   --gainwell-bg-secondary: #f8f9fa;
-  --gainwell-bg-light: #ebecf5;
+  --gainwell-bg-light: #f1f3f4;
   
   /* Border Colors */
-  --gainwell-border-light: rgba(204, 27, 198, 0.1);
-  --gainwell-border-medium: rgba(204, 27, 198, 0.2);
-  --gainwell-border-strong: var(--gainwell-primary);
+  --gainwell-border-light: rgba(56, 161, 105, 0.1);
+  --gainwell-border-medium: rgba(56, 161, 105, 0.2);
+  --gainwell-border-strong: var(--gainwell-secondary);
 }
 
 /* Global Font Styling */
@@ -36,18 +36,19 @@ body {
 
 /* Global Button Styling with Gainwell Colors */
 .p-button {
-  background: linear-gradient(135deg, var(--gainwell-primary), var(--gainwell-accent)) !important;
+  background: var(--gainwell-primary) !important;
+  color: white !important;
   border: none !important;
   border-radius: 8px !important;
   font-weight: 500 !important;
   transition: all 0.3s ease !important;
-  box-shadow: 0 2px 8px rgba(204, 27, 198, 0.15) !important;
+  box-shadow: 0 2px 8px rgba(74, 85, 104, 0.15) !important;
 }
 
 .p-button:hover {
-  background: linear-gradient(135deg, var(--gainwell-dark), var(--gainwell-primary)) !important;
+  background: linear-gradient(135deg, var(--gainwell-primary), var(--gainwell-secondary)) !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(27, 36, 166, 0.25) !important;
+  box-shadow: 0 4px 12px rgba(56, 161, 105, 0.25) !important;
 }
 
 .p-button.p-button-secondary {
