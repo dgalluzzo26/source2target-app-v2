@@ -3,201 +3,51 @@
     <div class="page-header">
       <h1>
         <i class="pi pi-sitemap"></i>
-        Field Mapping
+        Source-to-Target Field Mapping
       </h1>
-      <p>Map source fields to target schema with AI-powered suggestions</p>
+      <p>Map source database fields to target database fields using AI-powered semantic matching</p>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="stats-grid" v-if="stats">
-      <Card class="stat-card">
-        <template #content>
-          <div class="stat-content">
-            <div class="stat-value">{{ stats.total_tables }}</div>
-            <div class="stat-label">Source Tables</div>
-            <i class="pi pi-table stat-icon"></i>
-          </div>
-        </template>
-      </Card>
-      
-      <Card class="stat-card">
-        <template #content>
-          <div class="stat-content">
-            <div class="stat-value">{{ stats.total_columns }}</div>
-            <div class="stat-label">Total Columns</div>
-            <i class="pi pi-list stat-icon"></i>
-          </div>
-        </template>
-      </Card>
-      
-      <Card class="stat-card">
-        <template #content>
-          <div class="stat-content">
-            <div class="stat-value">{{ stats.mapped_columns }}</div>
-            <div class="stat-label">Mapped Columns</div>
-            <i class="pi pi-check-circle stat-icon"></i>
-          </div>
-        </template>
-      </Card>
-      
-      <Card class="stat-card">
-        <template #content>
-          <div class="stat-content">
-            <div class="stat-value">{{ stats.mapping_progress }}%</div>
-            <div class="stat-label">Progress</div>
-            <i class="pi pi-chart-line stat-icon"></i>
-          </div>
-        </template>
-      </Card>
-    </div>
-
-    <!-- Main Content Tabs -->
+    <!-- Main Content Tabs matching original app structure -->
     <TabView>
-      <!-- Source Tables Tab -->
-      <TabPanel header="Source Tables">
+      <!-- Unmapped Fields Tab (Main view from original) -->
+      <TabPanel header="📋 Unmapped Fields">
         <div class="table-controls">
           <div class="search-controls">
             <IconField iconPosition="left">
               <InputIcon class="pi pi-search" />
               <InputText
-                v-model="tableSearch"
-                placeholder="Search tables..."
-                @input="searchTables"
+                v-model="unmappedSearch"
+                placeholder="Search by table name, column name, physical name, datatype, nullable status, or description..."
+                @input="searchUnmappedFields"
               />
             </IconField>
-            <Button
-              icon="pi pi-refresh"
-              @click="loadSourceTables"
-              :loading="loading.tables"
+            <Button 
+              icon="pi pi-trash" 
+              label="Clear Search"
+              @click="clearUnmappedSearch"
               severity="secondary"
             />
-            <Button
-              icon="pi pi-cloud-download"
-              label="Discover from Databricks"
-              @click="discoverTables"
+          </div>
+          <div class="action-controls">
+            <Button 
+              icon="pi pi-upload" 
+              label="Upload Template"
+              @click="showTemplateUpload = true"
               severity="info"
             />
-            <Button
-              icon="pi pi-link"
-              label="Test Connection"
-              @click="testConnection"
-              :loading="loading.connection"
+            <Button 
+              icon="pi pi-download" 
+              label="Download Template"
+              @click="downloadTemplate"
               severity="help"
             />
           </div>
         </div>
 
         <DataTable 
-          :value="filteredSourceTables" 
-          :loading="loading.tables"
-          paginator 
-          :rows="10"
-          :rowsPerPageOptions="[5, 10, 20, 50]"
-          tableStyle="min-width: 50rem"
-          rowHover
-          class="p-datatable-sm"
-        >
-          <Column field="table_name" header="Source Table" sortable>
-            <template #body="{ data }">
-              <div class="table-name">
-                <strong>{{ data.table_name }}</strong>
-                <small>{{ data.catalog_name }}.{{ data.schema_name }}</small>
-              </div>
-            </template>
-          </Column>
-          
-          <Column field="table_type" header="Type" sortable>
-            <template #body="{ data }">
-              <Tag :value="data.table_type" :severity="getTableTypeSeverity(data.table_type)" />
-            </template>
-          </Column>
-          
-          <Column field="column_count" header="Columns" sortable />
-          
-          <Column field="mapping_progress" header="Progress" sortable>
-            <template #body="{ data }">
-              <div class="progress-container">
-                <ProgressBar :value="data.mapping_progress" :showValue="false" />
-                <span class="progress-text">{{ data.mapping_progress }}%</span>
-              </div>
-            </template>
-          </Column>
-          
-          <Column field="analysis_status" header="Status" sortable>
-            <template #body="{ data }">
-              <Tag 
-                :value="data.analysis_status" 
-                :severity="getAnalysisStatusSeverity(data.analysis_status)" 
-              />
-            </template>
-          </Column>
-          
-          <Column header="Actions">
-            <template #body="{ data }">
-              <div class="action-buttons">
-                <Button 
-                  icon="pi pi-eye" 
-                  size="small" 
-                  severity="info"
-                  @click="viewTableDetails(data)"
-                  v-tooltip="'View Details'"
-                />
-                <Button 
-                  icon="pi pi-cog" 
-                  size="small" 
-                  severity="secondary"
-                  @click="analyzeTable(data.id)"
-                  v-tooltip="'Analyze Table'"
-                />
-                <Button 
-                  icon="pi pi-magic-wand" 
-                  size="small" 
-                  severity="success"
-                  @click="generateAIMappings(data)"
-                  v-tooltip="'Generate AI Mappings'"
-                />
-              </div>
-            </template>
-          </Column>
-        </DataTable>
-      </TabPanel>
-
-      <!-- Field Mappings Tab -->
-      <TabPanel header="Field Mappings">
-        <div class="table-controls">
-          <div class="search-controls">
-            <IconField iconPosition="left">
-              <InputIcon class="pi pi-search" />
-              <InputText
-                v-model="mappingSearch"
-                placeholder="Search mappings..."
-                @input="searchMappings"
-              />
-            </IconField>
-            <Button 
-              icon="pi pi-refresh" 
-              @click="loadFieldMappings"
-              :loading="loading.mappings"
-              severity="secondary"
-            />
-            <Button 
-              icon="pi pi-plus" 
-              label="Create Mapping"
-              @click="createMapping"
-              severity="primary"
-            />
-            <Button 
-              icon="pi pi-upload" 
-              label="Upload Template"
-              @click="uploadTemplate"
-              severity="info"
-            />
-          </div>
-        </div>
-
-        <DataTable 
-          :value="filteredFieldMappings" 
-          :loading="loading.mappings"
+          :value="filteredUnmappedFields" 
+          :loading="loading.unmapped"
           paginator 
           :rows="10"
           :rowsPerPageOptions="[5, 10, 20, 50]"
@@ -205,123 +55,248 @@
           rowHover
           class="p-datatable-sm"
           selectionMode="single"
-          v-model:selection="selectedMapping"
-          @rowSelect="onMappingSelect"
+          v-model:selection="selectedUnmappedField"
+          @rowSelect="onUnmappedFieldSelect"
         >
-          <Column field="source_column_name" header="Source Column" sortable>
+          <Column field="src_table_name" header="Source Table" sortable>
             <template #body="{ data }">
-              <div class="column-info">
-                <strong>{{ data.source_column_name }}</strong>
-                <small>{{ data.source_table_name }}</small>
-                <Tag :value="data.source_data_type" size="small" />
-              </div>
+              <strong>{{ data.src_table_name }}</strong>
             </template>
           </Column>
           
-          <Column header="→" style="width: 3rem; text-align: center;">
-            <template #body>
-              <i class="pi pi-arrow-right" style="color: var(--gainwell-secondary);"></i>
+          <Column field="src_column_name" header="Source Column" sortable>
+            <template #body="{ data }">
+              <strong>{{ data.src_column_name }}</strong>
             </template>
           </Column>
           
-          <Column field="target_field_name" header="Target Field" sortable>
+          <Column field="src_column_physical_name" header="Physical Name" sortable />
+          
+          <Column field="src_nullable" header="Nullable" sortable>
             <template #body="{ data }">
-              <div class="column-info">
-                <strong>{{ data.target_field_name }}</strong>
-                <small>{{ data.target_schema_name }}</small>
-                <Tag :value="data.target_data_type" size="small" />
-              </div>
+              <Tag :value="data.src_nullable" :severity="data.src_nullable === 'YES' ? 'success' : 'danger'" />
             </template>
           </Column>
           
-          <Column field="mapping_type" header="Type" sortable>
+          <Column field="src_physical_datatype" header="Data Type" sortable>
             <template #body="{ data }">
-              <Tag :value="data.mapping_type" :severity="getMappingTypeSeverity(data.mapping_type)" />
+              <Tag :value="data.src_physical_datatype" />
             </template>
           </Column>
           
-          <Column field="confidence_score" header="Confidence" sortable>
+          <Column field="src_comments" header="Description">
             <template #body="{ data }">
-              <div v-if="data.confidence_score" class="confidence-score">
-                <ProgressBar :value="data.confidence_score * 100" :showValue="false" />
-                <span>{{ Math.round(data.confidence_score * 100) }}%</span>
-              </div>
-              <span v-else>-</span>
-            </template>
-          </Column>
-          
-          <Column field="status" header="Status" sortable>
-            <template #body="{ data }">
-              <Tag 
-                :value="data.status" 
-                :severity="getStatusSeverity(data.status)"
-                :icon="data.is_validated ? 'pi pi-check' : undefined"
-              />
-            </template>
-          </Column>
-          
-          <Column header="Actions">
-            <template #body="{ data }">
-              <div class="action-buttons">
-                <Button 
-                  icon="pi pi-check" 
-                  size="small" 
-                  severity="success"
-                  @click="validateMapping(data.id)"
-                  v-tooltip="'Validate Mapping'"
-                  :disabled="data.is_validated"
-                />
-                <Button 
-                  icon="pi pi-pencil" 
-                  size="small" 
-                  severity="info"
-                  @click="editMapping(data)"
-                  v-tooltip="'Edit Mapping'"
-                />
-                <Button 
-                  icon="pi pi-trash" 
-                  size="small" 
-                  severity="danger"
-                  @click="deleteMapping(data.id)"
-                  v-tooltip="'Delete Mapping'"
-                />
+              <div class="description-text">
+                {{ data.src_comments || 'No description' }}
               </div>
             </template>
           </Column>
         </DataTable>
+
+        <!-- Field Detail View (when row is selected) -->
+        <div v-if="selectedUnmappedField" class="field-detail-section">
+          <Card class="field-detail-card">
+            <template #title>
+              <div class="detail-header">
+                <h3>{{ selectedUnmappedField.src_table_name }}.{{ selectedUnmappedField.src_column_name }}</h3>
+                <Button 
+                  icon="pi pi-times" 
+                  @click="clearSelection"
+                  severity="secondary"
+                  size="small"
+                  text
+                />
+              </div>
+            </template>
+            
+            <template #content>
+              <div class="field-metadata">
+                <div class="metadata-grid">
+                  <div class="metadata-item">
+                    <label>Physical Name:</label>
+                    <span>{{ selectedUnmappedField.src_column_physical_name }}</span>
+                  </div>
+                  <div class="metadata-item">
+                    <label>Data Type:</label>
+                    <Tag :value="selectedUnmappedField.src_physical_datatype" />
+                  </div>
+                  <div class="metadata-item">
+                    <label>Nullable:</label>
+                    <Tag :value="selectedUnmappedField.src_nullable" :severity="selectedUnmappedField.src_nullable === 'YES' ? 'success' : 'danger'" />
+                  </div>
+                  <div class="metadata-item full-width">
+                    <label>Description:</label>
+                    <span>{{ selectedUnmappedField.src_comments || 'No description available' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- AI Mapping Section -->
+              <div class="ai-mapping-section">
+                <div class="section-header">
+                  <h4>🤖 AI Mapping Suggestions</h4>
+                  <div class="ai-controls">
+                    <Button 
+                      icon="pi pi-magic-wand" 
+                      label="Generate AI Suggestions"
+                      @click="generateAISuggestions"
+                      :loading="loading.aiSuggestions"
+                      severity="primary"
+                    />
+                  </div>
+                </div>
+
+                <!-- AI Configuration -->
+                <div class="ai-config">
+                  <div class="config-row">
+                    <div class="config-item">
+                      <label>Vector Results:</label>
+                      <InputNumber v-model="aiConfig.numVectorResults" :min="1" :max="100" />
+                    </div>
+                    <div class="config-item">
+                      <label>AI Results:</label>
+                      <InputNumber v-model="aiConfig.numAiResults" :min="1" :max="20" />
+                    </div>
+                  </div>
+                  <div class="config-row">
+                    <div class="config-item full-width">
+                      <label>User Feedback (optional):</label>
+                      <Textarea 
+                        v-model="aiConfig.userFeedback" 
+                        rows="2" 
+                        placeholder="Provide additional context or constraints for AI mapping..."
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- AI Results -->
+                <div v-if="aiSuggestions.length > 0" class="ai-results">
+                  <DataTable 
+                    :value="aiSuggestions"
+                    tableStyle="min-width: 50rem"
+                    rowHover
+                    class="p-datatable-sm"
+                  >
+                    <Column field="target_table" header="Target Table" />
+                    <Column field="target_column" header="Target Column" />
+                    <Column field="reasoning" header="AI Reasoning">
+                      <template #body="{ data }">
+                        <div class="reasoning-text">
+                          {{ data.reasoning }}
+                        </div>
+                      </template>
+                    </Column>
+                    <Column header="Actions">
+                      <template #body="{ data }">
+                        <Button 
+                          icon="pi pi-check" 
+                          label="Select"
+                          @click="selectAIMapping(data)"
+                          severity="success"
+                          size="small"
+                        />
+                      </template>
+                    </Column>
+                  </DataTable>
+                </div>
+              </div>
+
+              <!-- Manual Search Section -->
+              <div class="manual-search-section">
+                <div class="section-header">
+                  <h4>🔍 Manual Search</h4>
+                </div>
+                
+                <div class="search-controls">
+                  <IconField iconPosition="left">
+                    <InputIcon class="pi pi-search" />
+                    <InputText
+                      v-model="manualSearchTerm"
+                      placeholder="Search by table name, column name, or description..."
+                    />
+                  </IconField>
+                  <Button 
+                    icon="pi pi-search" 
+                    label="Search Semantic Table"
+                    @click="searchSemanticTable"
+                    :loading="loading.manualSearch"
+                    severity="info"
+                  />
+                </div>
+
+                <!-- Manual Search Results -->
+                <div v-if="manualSearchResults.length > 0" class="manual-results">
+                  <DataTable 
+                    :value="manualSearchResults"
+                    tableStyle="min-width: 50rem"
+                    rowHover
+                    class="p-datatable-sm"
+                    selectionMode="single"
+                    v-model:selection="selectedManualResult"
+                  >
+                    <Column field="tgt_table_name" header="Target Table" />
+                    <Column field="tgt_column_name" header="Target Column" />
+                    <Column field="tgt_physical_datatype" header="Data Type">
+                      <template #body="{ data }">
+                        <Tag :value="data.tgt_physical_datatype" />
+                      </template>
+                    </Column>
+                    <Column field="tgt_nullable" header="Nullable">
+                      <template #body="{ data }">
+                        <Tag :value="data.tgt_nullable" :severity="data.tgt_nullable === 'YES' ? 'success' : 'danger'" />
+                      </template>
+                    </Column>
+                    <Column field="tgt_comments" header="Description">
+                      <template #body="{ data }">
+                        <div class="description-text">
+                          {{ data.tgt_comments || 'No description' }}
+                        </div>
+                      </template>
+                    </Column>
+                    <Column header="Actions">
+                      <template #body="{ data }">
+                        <Button 
+                          icon="pi pi-check" 
+                          label="Select"
+                          @click="selectManualMapping(data)"
+                          severity="success"
+                          size="small"
+                        />
+                      </template>
+                    </Column>
+                  </DataTable>
+                </div>
+              </div>
+            </template>
+          </Card>
+        </div>
       </TabPanel>
 
-      <!-- AI Suggestions Tab -->
-      <TabPanel header="AI Suggestions">
+      <!-- Mapped Fields Tab -->
+      <TabPanel header="✅ Mapped Fields">
         <div class="table-controls">
           <div class="search-controls">
             <IconField iconPosition="left">
               <InputIcon class="pi pi-search" />
               <InputText
-                v-model="aiSearch"
-                placeholder="Search AI suggestions..."
-                @input="searchAISuggestions"
+                v-model="mappedSearch"
+                placeholder="Search mapped fields..."
+                @input="searchMappedFields"
               />
             </IconField>
             <Button 
               icon="pi pi-refresh" 
-              @click="loadAISuggestions"
-              :loading="loading.suggestions"
+              @click="loadMappedFields"
+              :loading="loading.mapped"
               severity="secondary"
-            />
-            <Button 
-              icon="pi pi-magic-wand" 
-              label="Generate New Suggestions"
-              @click="generateAISuggestions"
-              :loading="loading.generating"
-              severity="primary"
             />
           </div>
         </div>
 
         <DataTable 
-          :value="filteredAISuggestions" 
-          :loading="loading.suggestions"
+          :value="filteredMappedFields" 
+          :loading="loading.mapped"
           paginator 
           :rows="10"
           :rowsPerPageOptions="[5, 10, 20, 50]"
@@ -329,165 +304,239 @@
           rowHover
           class="p-datatable-sm"
         >
-          <Column field="source_column_name" header="Source Column" sortable>
-            <template #body="{ data }">
-              <div class="column-info">
-                <strong>{{ data.source_column_name }}</strong>
-                <small>{{ data.source_table_name }}</small>
-                <Tag :value="data.source_data_type" size="small" />
-              </div>
+          <Column field="src_table_name" header="Source Table" sortable />
+          <Column field="src_column_name" header="Source Column" sortable />
+          <Column header="→" style="width: 3rem; text-align: center;">
+            <template #body>
+              <i class="pi pi-arrow-right" style="color: var(--gainwell-secondary);"></i>
             </template>
           </Column>
-          
-          <Column field="target_field_name" header="Suggested Target" sortable>
-            <template #body="{ data }">
-              <div class="column-info">
-                <strong>{{ data.target_field_name }}</strong>
-                <small>{{ data.target_schema_name }}</small>
-                <Tag :value="data.target_data_type" size="small" />
-              </div>
-            </template>
-          </Column>
-          
-          <Column field="confidence_score" header="Confidence" sortable>
-            <template #body="{ data }">
-              <div class="confidence-score">
-                <ProgressBar :value="data.confidence_score * 100" :showValue="false" />
-                <span>{{ Math.round(data.confidence_score * 100) }}%</span>
-              </div>
-            </template>
-          </Column>
-          
-          <Column field="model_name" header="Model" sortable />
-          
-          <Column field="reasoning" header="Reasoning">
-            <template #body="{ data }">
-              <div class="reasoning-text">
-                {{ data.reasoning.substring(0, 100) }}...
-              </div>
-            </template>
-          </Column>
-          
+          <Column field="tgt_table_name" header="Target Table" sortable />
+          <Column field="tgt_column_physical" header="Target Column" sortable />
           <Column header="Actions">
             <template #body="{ data }">
-              <div class="action-buttons">
-                <Button 
-                  icon="pi pi-check" 
-                  size="small" 
-                  severity="success"
-                  @click="acceptSuggestion(data.id)"
-                  v-tooltip="'Accept Suggestion'"
-                />
-                <Button 
-                  icon="pi pi-times" 
-                  size="small" 
-                  severity="danger"
-                  @click="rejectSuggestion(data.id)"
-                  v-tooltip="'Reject Suggestion'"
-                />
-                <Button 
-                  icon="pi pi-eye" 
-                  size="small" 
-                  severity="info"
-                  @click="viewSuggestionDetails(data)"
-                  v-tooltip="'View Details'"
-                />
-              </div>
+              <Button 
+                icon="pi pi-trash" 
+                @click="unmapField(data)"
+                severity="danger"
+                size="small"
+                v-tooltip="'Remove Mapping'"
+              />
             </template>
           </Column>
         </DataTable>
       </TabPanel>
+
+      <!-- Semantic Table Management Tab -->
+      <TabPanel header="🗂️ Semantic Table">
+        <div class="semantic-management">
+          <div class="table-controls">
+            <div class="search-controls">
+              <IconField iconPosition="left">
+                <InputIcon class="pi pi-search" />
+                <InputText
+                  v-model="semanticSearch"
+                  placeholder="Search by table, column, or description..."
+                  @input="searchSemanticTable"
+                />
+              </IconField>
+              <Button 
+                icon="pi pi-refresh" 
+                @click="loadSemanticTable"
+                :loading="loading.semantic"
+                severity="secondary"
+              />
+            </div>
+            <div class="action-controls">
+              <Button 
+                icon="pi pi-plus" 
+                label="Add Semantic Record"
+                @click="showAddSemantic = true"
+                severity="primary"
+              />
+            </div>
+          </div>
+
+          <DataTable 
+            :value="filteredSemanticRecords" 
+            :loading="loading.semantic"
+            paginator 
+            :rows="10"
+            :rowsPerPageOptions="[5, 10, 20, 50]"
+            tableStyle="min-width: 50rem"
+            rowHover
+            class="p-datatable-sm"
+          >
+            <Column field="tgt_table_name" header="Target Table" sortable />
+            <Column field="tgt_column_name" header="Target Column" sortable />
+            <Column field="tgt_physical_datatype" header="Data Type" sortable>
+              <template #body="{ data }">
+                <Tag :value="data.tgt_physical_datatype" />
+              </template>
+            </Column>
+            <Column field="tgt_nullable" header="Nullable" sortable>
+              <template #body="{ data }">
+                <Tag :value="data.tgt_nullable" :severity="data.tgt_nullable === 'YES' ? 'success' : 'danger'" />
+              </template>
+            </Column>
+            <Column field="tgt_comments" header="Description">
+              <template #body="{ data }">
+                <div class="description-text">
+                  {{ data.tgt_comments || 'No description' }}
+                </div>
+              </template>
+            </Column>
+            <Column field="semantic_field" header="Semantic Field">
+              <template #body="{ data }">
+                <div class="semantic-text">
+                  {{ data.semantic_field }}
+                </div>
+              </template>
+            </Column>
+            <Column header="Actions">
+              <template #body="{ data }">
+                <div class="action-buttons">
+                  <Button 
+                    icon="pi pi-pencil" 
+                    @click="editSemanticRecord(data)"
+                    severity="info"
+                    size="small"
+                    v-tooltip="'Edit'"
+                  />
+                  <Button 
+                    icon="pi pi-trash" 
+                    @click="deleteSemanticRecord(data)"
+                    severity="danger"
+                    size="small"
+                    v-tooltip="'Delete'"
+                  />
+                </div>
+              </template>
+            </Column>
+          </DataTable>
+        </div>
+      </TabPanel>
     </TabView>
 
-    <!-- Mapping Detail Dialog -->
+    <!-- Template Upload Dialog -->
     <Dialog 
-      v-model:visible="showMappingDetail" 
+      v-model:visible="showTemplateUpload" 
       modal 
-      header="Mapping Details"
-      :style="{ width: '60rem' }"
+      header="Upload Mapping Template"
+      :style="{ width: '50rem' }"
     >
-      <div v-if="selectedMapping" class="mapping-detail">
-        <div class="detail-grid">
-          <div class="detail-section">
-            <h4>Source Information</h4>
-            <div class="detail-item">
-              <label>Table:</label>
-              <span>{{ selectedMapping.source_table_name }}</span>
-            </div>
-            <div class="detail-item">
-              <label>Column:</label>
-              <span>{{ selectedMapping.source_column_name }}</span>
-            </div>
-            <div class="detail-item">
-              <label>Data Type:</label>
-              <Tag :value="selectedMapping.source_data_type" />
-            </div>
-          </div>
+      <div class="upload-section">
+        <p>Upload a CSV file with the following columns:</p>
+        <ul>
+          <li><strong>src_table_name</strong> - Source table name</li>
+          <li><strong>src_column_name</strong> - Source column name</li>
+          <li><strong>src_column_physical_name</strong> - Physical column name</li>
+          <li><strong>src_nullable</strong> - YES/NO</li>
+          <li><strong>src_physical_datatype</strong> - Data type</li>
+          <li><strong>src_comments</strong> - Column description</li>
+        </ul>
+        
+        <FileUpload 
+          mode="basic" 
+          accept=".csv"
+          :maxFileSize="10000000"
+          @upload="uploadTemplate"
+          :auto="true"
+          chooseLabel="Select CSV File"
+        />
+      </div>
 
-          <div class="detail-section">
-            <h4>Target Information</h4>
-            <div class="detail-item">
-              <label>Schema:</label>
-              <span>{{ selectedMapping.target_schema_name }}</span>
-            </div>
-            <div class="detail-item">
-              <label>Field:</label>
-              <span>{{ selectedMapping.target_field_name }}</span>
-            </div>
-            <div class="detail-item">
-              <label>Data Type:</label>
-              <Tag :value="selectedMapping.target_data_type" />
-            </div>
-          </div>
+      <template #footer>
+        <Button 
+          label="Cancel" 
+          icon="pi pi-times" 
+          @click="showTemplateUpload = false" 
+          severity="secondary"
+        />
+      </template>
+    </Dialog>
+
+    <!-- Add Semantic Record Dialog -->
+    <Dialog 
+      v-model:visible="showAddSemantic" 
+      modal 
+      header="Add Semantic Record"
+      :style="{ width: '50rem' }"
+    >
+      <div class="semantic-form">
+        <div class="field">
+          <label for="tgt_table_name">Target Table Name *</label>
+          <InputText 
+            id="tgt_table_name"
+            v-model="newSemanticRecord.tgt_table_name"
+            class="w-full"
+          />
         </div>
-
-        <div class="mapping-metadata">
-          <div class="metadata-item">
-            <label>Mapping Type:</label>
-            <Tag :value="selectedMapping.mapping_type" :severity="getMappingTypeSeverity(selectedMapping.mapping_type)" />
-          </div>
-          <div class="metadata-item" v-if="selectedMapping.confidence_score">
-            <label>Confidence Score:</label>
-            <div class="confidence-score">
-              <ProgressBar :value="selectedMapping.confidence_score * 100" :showValue="false" />
-              <span>{{ Math.round(selectedMapping.confidence_score * 100) }}%</span>
-            </div>
-          </div>
-          <div class="metadata-item">
-            <label>Status:</label>
-            <Tag 
-              :value="selectedMapping.status" 
-              :severity="getStatusSeverity(selectedMapping.status)"
-              :icon="selectedMapping.is_validated ? 'pi pi-check' : undefined"
-            />
-          </div>
+        
+        <div class="field">
+          <label for="tgt_column_name">Target Column Name *</label>
+          <InputText 
+            id="tgt_column_name"
+            v-model="newSemanticRecord.tgt_column_name"
+            class="w-full"
+          />
         </div>
-
-        <div v-if="selectedMapping.validation_notes" class="validation-notes">
-          <h4>Validation Notes</h4>
-          <p>{{ selectedMapping.validation_notes }}</p>
+        
+        <div class="field">
+          <label for="tgt_physical_datatype">Data Type *</label>
+          <InputText 
+            id="tgt_physical_datatype"
+            v-model="newSemanticRecord.tgt_physical_datatype"
+            class="w-full"
+          />
+        </div>
+        
+        <div class="field">
+          <label for="tgt_nullable">Nullable *</label>
+          <Dropdown 
+            id="tgt_nullable"
+            v-model="newSemanticRecord.tgt_nullable"
+            :options="[{label: 'YES', value: 'YES'}, {label: 'NO', value: 'NO'}]"
+            optionLabel="label"
+            optionValue="value"
+            class="w-full"
+          />
+        </div>
+        
+        <div class="field">
+          <label for="tgt_comments">Description</label>
+          <Textarea 
+            id="tgt_comments"
+            v-model="newSemanticRecord.tgt_comments"
+            rows="3"
+            class="w-full"
+          />
+        </div>
+        
+        <div class="field">
+          <label for="semantic_field">Semantic Field *</label>
+          <Textarea 
+            id="semantic_field"
+            v-model="newSemanticRecord.semantic_field"
+            rows="3"
+            class="w-full"
+            placeholder="Semantic description for vector search..."
+          />
         </div>
       </div>
 
       <template #footer>
         <Button 
-          label="Close" 
+          label="Cancel" 
           icon="pi pi-times" 
-          @click="showMappingDetail = false" 
+          @click="cancelAddSemantic" 
           severity="secondary"
         />
         <Button 
-          v-if="selectedMapping && !selectedMapping.is_validated"
-          label="Validate" 
-          icon="pi pi-check" 
-          @click="validateMapping(selectedMapping.id)" 
-          severity="success"
-        />
-        <Button 
-          label="Edit" 
-          icon="pi pi-pencil" 
-          @click="editMapping(selectedMapping)" 
-          severity="info"
+          label="Add Record" 
+          icon="pi pi-plus" 
+          @click="addSemanticRecord" 
+          severity="primary"
         />
       </template>
     </Dialog>
@@ -496,418 +545,385 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { MappingAPI, handleApiError } from '@/services/api'
 
-// Reactive data with comprehensive dummy data
-const stats = ref({
-  total_tables: 47,
-  total_columns: 1234,
-  mapped_columns: 892,
-  mapping_progress: 72
+// Reactive data matching original app structure
+const unmappedFields = ref([
+  {
+    src_table_name: 'patient_demographics',
+    src_column_name: 'patient_id',
+    src_column_physical_name: 'patient_id',
+    src_nullable: 'NO',
+    src_physical_datatype: 'STRING',
+    src_comments: 'Unique identifier for patient records'
+  },
+  {
+    src_table_name: 'patient_demographics',
+    src_column_name: 'first_name',
+    src_column_physical_name: 'first_name',
+    src_nullable: 'YES',
+    src_physical_datatype: 'STRING',
+    src_comments: 'Patient first name'
+  },
+  {
+    src_table_name: 'claims_summary',
+    src_column_name: 'claim_id',
+    src_column_physical_name: 'claim_id',
+    src_nullable: 'NO',
+    src_physical_datatype: 'BIGINT',
+    src_comments: 'Unique claim identifier'
+  },
+  {
+    src_table_name: 'claims_summary',
+    src_column_name: 'claim_amount',
+    src_column_physical_name: 'claim_amount',
+    src_nullable: 'YES',
+    src_physical_datatype: 'DECIMAL(10,2)',
+    src_comments: 'Total claim amount in dollars'
+  },
+  {
+    src_table_name: 'provider_network',
+    src_column_name: 'provider_npi',
+    src_column_physical_name: 'provider_npi',
+    src_nullable: 'NO',
+    src_physical_datatype: 'STRING',
+    src_comments: 'National Provider Identifier'
+  }
+])
+
+const mappedFields = ref([
+  {
+    src_table_name: 'patient_demographics',
+    src_column_name: 'date_of_birth',
+    tgt_table_name: 'unified_member',
+    tgt_column_physical: 'member_birth_date'
+  },
+  {
+    src_table_name: 'enrollment_periods',
+    src_column_name: 'member_ssn',
+    tgt_table_name: 'unified_member',
+    tgt_column_physical: 'member_social_security'
+  }
+])
+
+const semanticRecords = ref([
+  {
+    tgt_table_name: 'unified_member',
+    tgt_column_name: 'member_id',
+    tgt_physical_datatype: 'VARCHAR(50)',
+    tgt_nullable: 'NO',
+    tgt_comments: 'Unique member identifier',
+    semantic_field: 'member identifier unique id patient customer'
+  },
+  {
+    tgt_table_name: 'unified_member',
+    tgt_column_name: 'member_first_name',
+    tgt_physical_datatype: 'VARCHAR(100)',
+    tgt_nullable: 'YES',
+    tgt_comments: 'Member first name',
+    semantic_field: 'first name given name personal name'
+  },
+  {
+    tgt_table_name: 'unified_claims',
+    tgt_column_name: 'total_claim_amount',
+    tgt_physical_datatype: 'DECIMAL(12,2)',
+    tgt_nullable: 'YES',
+    tgt_comments: 'Total amount of the claim',
+    semantic_field: 'claim amount total cost price money dollar'
+  }
+])
+
+// Search terms
+const unmappedSearch = ref('')
+const mappedSearch = ref('')
+const semanticSearch = ref('')
+const manualSearchTerm = ref('')
+
+// Selected items
+const selectedUnmappedField = ref(null)
+const selectedManualResult = ref(null)
+
+// AI configuration
+const aiConfig = ref({
+  numVectorResults: 25,
+  numAiResults: 10,
+  userFeedback: ''
 })
 
-const sourceTables = ref([
-  {
-    id: 1,
-    table_name: 'patient_demographics',
-    catalog_name: 'healthcare_raw',
-    schema_name: 'patient_data',
-    table_type: 'MANAGED',
-    column_count: 15,
-    mapping_progress: 87,
-    analysis_status: 'analyzed'
-  },
-  {
-    id: 2,
-    table_name: 'claims_summary',
-    catalog_name: 'healthcare_raw',
-    schema_name: 'claims_data',
-    table_type: 'EXTERNAL',
-    column_count: 28,
-    mapping_progress: 64,
-    analysis_status: 'analyzed'
-  },
-  {
-    id: 3,
-    table_name: 'provider_network',
-    catalog_name: 'healthcare_raw',
-    schema_name: 'provider_data',
-    table_type: 'VIEW',
-    column_count: 22,
-    mapping_progress: 91,
-    analysis_status: 'analyzed'
-  },
-  {
-    id: 4,
-    table_name: 'medication_history',
-    catalog_name: 'healthcare_raw',
-    schema_name: 'pharmacy_data',
-    table_type: 'MANAGED',
-    column_count: 19,
-    mapping_progress: 43,
-    analysis_status: 'pending'
-  },
-  {
-    id: 5,
-    table_name: 'enrollment_periods',
-    catalog_name: 'healthcare_raw',
-    schema_name: 'member_data',
-    table_type: 'MANAGED',
-    column_count: 12,
-    mapping_progress: 100,
-    analysis_status: 'analyzed'
-  }
-])
-
-const fieldMappings = ref([
-  {
-    id: 1,
-    source_column_name: 'patient_id',
-    source_table_name: 'patient_demographics',
-    source_data_type: 'STRING',
-    target_field_name: 'member_id',
-    target_schema_name: 'unified_member',
-    target_data_type: 'VARCHAR(50)',
-    mapping_type: 'MANUAL',
-    confidence_score: null,
-    status: 'VALIDATED',
-    is_validated: true,
-    validation_notes: 'Direct mapping confirmed by business analyst'
-  },
-  {
-    id: 2,
-    source_column_name: 'first_name',
-    source_table_name: 'patient_demographics',
-    source_data_type: 'STRING',
-    target_field_name: 'member_first_name',
-    target_schema_name: 'unified_member',
-    target_data_type: 'VARCHAR(100)',
-    mapping_type: 'AI_SUGGESTION',
-    confidence_score: 0.95,
-    status: 'VALIDATED',
-    is_validated: true,
-    validation_notes: 'High confidence AI mapping, validated by SME'
-  },
-  {
-    id: 3,
-    source_column_name: 'date_of_birth',
-    source_table_name: 'patient_demographics',
-    source_data_type: 'DATE',
-    target_field_name: 'member_birth_date',
-    target_schema_name: 'unified_member',
-    target_data_type: 'DATE',
-    mapping_type: 'TEMPLATE',
-    confidence_score: null,
-    status: 'VALIDATED',
-    is_validated: true,
-    validation_notes: 'Standard demographic mapping from template'
-  },
-  {
-    id: 4,
-    source_column_name: 'claim_amount',
-    source_table_name: 'claims_summary',
-    source_data_type: 'DECIMAL(10,2)',
-    target_field_name: 'total_claim_amount',
-    target_schema_name: 'unified_claims',
-    target_data_type: 'DECIMAL(12,2)',
-    mapping_type: 'AI_SUGGESTION',
-    confidence_score: 0.88,
-    status: 'PENDING',
-    is_validated: false,
-    validation_notes: null
-  },
-  {
-    id: 5,
-    source_column_name: 'provider_npi',
-    source_table_name: 'provider_network',
-    source_data_type: 'STRING',
-    target_field_name: 'provider_national_id',
-    target_schema_name: 'unified_provider',
-    target_data_type: 'VARCHAR(10)',
-    mapping_type: 'MANUAL',
-    confidence_score: null,
-    status: 'REJECTED',
-    is_validated: false,
-    validation_notes: 'Rejected due to data quality issues in source'
-  }
-])
-
-const aiSuggestions = ref([
-  {
-    id: 1,
-    source_column_name: 'member_ssn',
-    source_table_name: 'enrollment_periods',
-    source_data_type: 'STRING',
-    target_field_name: 'member_social_security',
-    target_schema_name: 'unified_member',
-    target_data_type: 'VARCHAR(11)',
-    confidence_score: 0.92,
-    model_name: 'llama-3-70b',
-    reasoning: 'Strong semantic match between SSN fields. Both represent social security numbers for member identification. Data types are compatible with proper formatting.',
-    status: 'PENDING'
-  },
-  {
-    id: 2,
-    source_column_name: 'drug_ndc',
-    source_table_name: 'medication_history',
-    source_data_type: 'STRING',
-    target_field_name: 'medication_ndc_code',
-    target_schema_name: 'unified_pharmacy',
-    target_data_type: 'VARCHAR(11)',
-    confidence_score: 0.89,
-    model_name: 'llama-3-70b',
-    reasoning: 'NDC (National Drug Code) is a standard identifier for medications. High confidence match based on field naming and healthcare domain context.',
-    status: 'PENDING'
-  },
-  {
-    id: 3,
-    source_column_name: 'service_date',
-    source_table_name: 'claims_summary',
-    source_data_type: 'DATE',
-    target_field_name: 'claim_service_date',
-    target_schema_name: 'unified_claims',
-    target_data_type: 'DATE',
-    confidence_score: 0.94,
-    model_name: 'llama-3-70b',
-    reasoning: 'Direct semantic match for service dates in claims processing. Both fields represent when healthcare services were provided.',
-    status: 'PENDING'
-  }
-])
-
-// Search and filter states
-const tableSearch = ref('')
-const mappingSearch = ref('')
-const aiSearch = ref('')
+// AI and manual search results
+const aiSuggestions = ref([])
+const manualSearchResults = ref([])
 
 // Dialog states
-const showMappingDetail = ref(false)
-const selectedMapping = ref(null)
+const showTemplateUpload = ref(false)
+const showAddSemantic = ref(false)
+
+// New semantic record form
+const newSemanticRecord = ref({
+  tgt_table_name: '',
+  tgt_column_name: '',
+  tgt_physical_datatype: '',
+  tgt_nullable: 'NO',
+  tgt_comments: '',
+  semantic_field: ''
+})
 
 // Loading states
 const loading = ref({
-  tables: false,
-  mappings: false,
-  suggestions: false,
-  connection: false,
-  generating: false
+  unmapped: false,
+  mapped: false,
+  semantic: false,
+  aiSuggestions: false,
+  manualSearch: false
 })
 
 // Computed filtered data
-const filteredSourceTables = computed(() => {
-  if (!tableSearch.value) return sourceTables.value
-  return sourceTables.value.filter(table => 
-    table.table_name.toLowerCase().includes(tableSearch.value.toLowerCase()) ||
-    table.catalog_name.toLowerCase().includes(tableSearch.value.toLowerCase()) ||
-    table.schema_name.toLowerCase().includes(tableSearch.value.toLowerCase())
+const filteredUnmappedFields = computed(() => {
+  if (!unmappedSearch.value) return unmappedFields.value
+  const search = unmappedSearch.value.toLowerCase()
+  return unmappedFields.value.filter(field => 
+    field.src_table_name.toLowerCase().includes(search) ||
+    field.src_column_name.toLowerCase().includes(search) ||
+    field.src_column_physical_name.toLowerCase().includes(search) ||
+    field.src_physical_datatype.toLowerCase().includes(search) ||
+    field.src_nullable.toLowerCase().includes(search) ||
+    (field.src_comments && field.src_comments.toLowerCase().includes(search))
   )
 })
 
-const filteredFieldMappings = computed(() => {
-  if (!mappingSearch.value) return fieldMappings.value
-  return fieldMappings.value.filter(mapping => 
-    mapping.source_column_name.toLowerCase().includes(mappingSearch.value.toLowerCase()) ||
-    mapping.source_table_name.toLowerCase().includes(mappingSearch.value.toLowerCase()) ||
-    mapping.target_field_name.toLowerCase().includes(mappingSearch.value.toLowerCase()) ||
-    mapping.target_schema_name.toLowerCase().includes(mappingSearch.value.toLowerCase())
+const filteredMappedFields = computed(() => {
+  if (!mappedSearch.value) return mappedFields.value
+  const search = mappedSearch.value.toLowerCase()
+  return mappedFields.value.filter(field => 
+    field.src_table_name.toLowerCase().includes(search) ||
+    field.src_column_name.toLowerCase().includes(search) ||
+    field.tgt_table_name.toLowerCase().includes(search) ||
+    field.tgt_column_physical.toLowerCase().includes(search)
   )
 })
 
-const filteredAISuggestions = computed(() => {
-  if (!aiSearch.value) return aiSuggestions.value
-  return aiSuggestions.value.filter(suggestion => 
-    suggestion.source_column_name.toLowerCase().includes(aiSearch.value.toLowerCase()) ||
-    suggestion.source_table_name.toLowerCase().includes(aiSearch.value.toLowerCase()) ||
-    suggestion.target_field_name.toLowerCase().includes(aiSearch.value.toLowerCase()) ||
-    suggestion.reasoning.toLowerCase().includes(aiSearch.value.toLowerCase())
+const filteredSemanticRecords = computed(() => {
+  if (!semanticSearch.value) return semanticRecords.value
+  const search = semanticSearch.value.toLowerCase()
+  return semanticRecords.value.filter(record => 
+    record.tgt_table_name.toLowerCase().includes(search) ||
+    record.tgt_column_name.toLowerCase().includes(search) ||
+    (record.tgt_comments && record.tgt_comments.toLowerCase().includes(search)) ||
+    record.semantic_field.toLowerCase().includes(search)
   )
 })
 
 // Methods
-const loadSourceTables = async () => {
-  loading.value.tables = true
-  // Simulate API call
+const searchUnmappedFields = () => {
+  console.log('Searching unmapped fields:', unmappedSearch.value)
+}
+
+const clearUnmappedSearch = () => {
+  unmappedSearch.value = ''
+}
+
+const searchMappedFields = () => {
+  console.log('Searching mapped fields:', mappedSearch.value)
+}
+
+const onUnmappedFieldSelect = (event: any) => {
+  selectedUnmappedField.value = event.data
+  // Clear previous results when selecting new field
+  aiSuggestions.value = []
+  manualSearchResults.value = []
+}
+
+const clearSelection = () => {
+  selectedUnmappedField.value = null
+  aiSuggestions.value = []
+  manualSearchResults.value = []
+}
+
+const generateAISuggestions = async () => {
+  if (!selectedUnmappedField.value) return
+  
+  loading.value.aiSuggestions = true
+  
+  // Simulate AI API call
   setTimeout(() => {
-    loading.value.tables = false
-    console.log('Source tables loaded')
-  }, 1000)
-}
-
-const loadFieldMappings = async () => {
-  loading.value.mappings = true
-  // Simulate API call
-  setTimeout(() => {
-    loading.value.mappings = false
-    console.log('Field mappings loaded')
-  }, 1000)
-}
-
-const loadAISuggestions = async () => {
-  loading.value.suggestions = true
-  // Simulate API call
-  setTimeout(() => {
-    loading.value.suggestions = false
-    console.log('AI suggestions loaded')
-  }, 1000)
-}
-
-const searchTables = () => {
-  console.log('Searching tables:', tableSearch.value)
-}
-
-const searchMappings = () => {
-  console.log('Searching mappings:', mappingSearch.value)
-}
-
-const searchAISuggestions = () => {
-  console.log('Searching AI suggestions:', aiSearch.value)
-}
-
-const viewTableDetails = (table: any) => {
-  console.log('View table details:', table)
-}
-
-const analyzeTable = (tableId: number) => {
-  console.log('Analyze table:', tableId)
-}
-
-const generateAIMappings = (table: any) => {
-  console.log('Generate AI mappings for table:', table)
-}
-
-const testConnection = () => {
-  loading.value.connection = true
-  setTimeout(() => {
-    loading.value.connection = false
-    console.log('Connection test completed')
+    aiSuggestions.value = [
+      {
+        target_table: 'unified_member',
+        target_column: 'member_id',
+        reasoning: 'Strong semantic match between patient_id and member_id. Both represent unique identifiers for individuals in healthcare systems.'
+      },
+      {
+        target_table: 'unified_member',
+        target_column: 'member_external_id',
+        reasoning: 'Alternative mapping for external system identifier. Could be used for cross-system patient identification.'
+      }
+    ]
+    loading.value.aiSuggestions = false
   }, 2000)
 }
 
-const discoverTables = () => {
-  console.log('Discover tables from Databricks')
-}
-
-const createMapping = () => {
-  console.log('Create new mapping')
-}
-
-const uploadTemplate = () => {
-  console.log('Upload mapping template')
-}
-
-const onMappingSelect = (event: any) => {
-  selectedMapping.value = event.data
-  showMappingDetail.value = true
-}
-
-const validateMapping = (mappingId: number) => {
-  console.log('Validate mapping:', mappingId)
-  const mapping = fieldMappings.value.find(m => m.id === mappingId)
-  if (mapping) {
-    mapping.is_validated = true
-    mapping.status = 'VALIDATED'
+const selectAIMapping = (mapping: any) => {
+  console.log('Selected AI mapping:', mapping)
+  // Move from unmapped to mapped
+  const newMapping = {
+    src_table_name: selectedUnmappedField.value.src_table_name,
+    src_column_name: selectedUnmappedField.value.src_column_name,
+    tgt_table_name: mapping.target_table,
+    tgt_column_physical: mapping.target_column
   }
-}
-
-const editMapping = (mapping: any) => {
-  console.log('Edit mapping:', mapping)
-}
-
-const deleteMapping = (mappingId: number) => {
-  console.log('Delete mapping:', mappingId)
-  const index = fieldMappings.value.findIndex(m => m.id === mappingId)
+  mappedFields.value.push(newMapping)
+  
+  // Remove from unmapped
+  const index = unmappedFields.value.findIndex(f => 
+    f.src_table_name === selectedUnmappedField.value.src_table_name &&
+    f.src_column_name === selectedUnmappedField.value.src_column_name
+  )
   if (index > -1) {
-    fieldMappings.value.splice(index, 1)
+    unmappedFields.value.splice(index, 1)
   }
+  
+  clearSelection()
 }
 
-const generateAISuggestions = () => {
-  loading.value.generating = true
+const searchSemanticTable = async () => {
+  if (!manualSearchTerm.value.trim()) {
+    return
+  }
+  
+  loading.value.manualSearch = true
+  
+  // Simulate semantic table search
   setTimeout(() => {
-    loading.value.generating = false
-    console.log('AI suggestions generated')
-  }, 3000)
+    const search = manualSearchTerm.value.toLowerCase()
+    manualSearchResults.value = semanticRecords.value.filter(record => 
+      record.tgt_table_name.toLowerCase().includes(search) ||
+      record.tgt_column_name.toLowerCase().includes(search) ||
+      (record.tgt_comments && record.tgt_comments.toLowerCase().includes(search))
+    )
+    loading.value.manualSearch = false
+  }, 1000)
 }
 
-const acceptSuggestion = (suggestionId: number) => {
-  console.log('Accept AI suggestion:', suggestionId)
-  const suggestion = aiSuggestions.value.find(s => s.id === suggestionId)
-  if (suggestion) {
-    // Convert suggestion to mapping
-    const newMapping = {
-      id: fieldMappings.value.length + 1,
-      source_column_name: suggestion.source_column_name,
-      source_table_name: suggestion.source_table_name,
-      source_data_type: suggestion.source_data_type,
-      target_field_name: suggestion.target_field_name,
-      target_schema_name: suggestion.target_schema_name,
-      target_data_type: suggestion.target_data_type,
-      mapping_type: 'AI_SUGGESTION',
-      confidence_score: suggestion.confidence_score,
-      status: 'PENDING',
-      is_validated: false,
-      validation_notes: null
-    }
-    fieldMappings.value.push(newMapping)
-    
-    // Remove from suggestions
-    const index = aiSuggestions.value.findIndex(s => s.id === suggestionId)
-    if (index > -1) {
-      aiSuggestions.value.splice(index, 1)
-    }
+const selectManualMapping = (mapping: any) => {
+  console.log('Selected manual mapping:', mapping)
+  // Move from unmapped to mapped
+  const newMapping = {
+    src_table_name: selectedUnmappedField.value.src_table_name,
+    src_column_name: selectedUnmappedField.value.src_column_name,
+    tgt_table_name: mapping.tgt_table_name,
+    tgt_column_physical: mapping.tgt_column_name
   }
-}
-
-const rejectSuggestion = (suggestionId: number) => {
-  console.log('Reject AI suggestion:', suggestionId)
-  const index = aiSuggestions.value.findIndex(s => s.id === suggestionId)
+  mappedFields.value.push(newMapping)
+  
+  // Remove from unmapped
+  const index = unmappedFields.value.findIndex(f => 
+    f.src_table_name === selectedUnmappedField.value.src_table_name &&
+    f.src_column_name === selectedUnmappedField.value.src_column_name
+  )
   if (index > -1) {
-    aiSuggestions.value.splice(index, 1)
+    unmappedFields.value.splice(index, 1)
+  }
+  
+  clearSelection()
+}
+
+const loadMappedFields = () => {
+  loading.value.mapped = true
+  setTimeout(() => {
+    loading.value.mapped = false
+  }, 1000)
+}
+
+const unmapField = (field: any) => {
+  console.log('Unmap field:', field)
+  // Move back to unmapped
+  const unmappedField = {
+    src_table_name: field.src_table_name,
+    src_column_name: field.src_column_name,
+    src_column_physical_name: field.src_column_name,
+    src_nullable: 'YES',
+    src_physical_datatype: 'STRING',
+    src_comments: 'Restored from mapping'
+  }
+  unmappedFields.value.push(unmappedField)
+  
+  // Remove from mapped
+  const index = mappedFields.value.findIndex(f => 
+    f.src_table_name === field.src_table_name &&
+    f.src_column_name === field.src_column_name
+  )
+  if (index > -1) {
+    mappedFields.value.splice(index, 1)
   }
 }
 
-const viewSuggestionDetails = (suggestion: any) => {
-  console.log('View suggestion details:', suggestion)
+const loadSemanticTable = () => {
+  loading.value.semantic = true
+  setTimeout(() => {
+    loading.value.semantic = false
+  }, 1000)
 }
 
-// Utility methods for styling
-const getTableTypeSeverity = (type: string) => {
-  switch (type) {
-    case 'MANAGED': return 'success'
-    case 'EXTERNAL': return 'info'
-    case 'VIEW': return 'warning'
-    default: return 'secondary'
+const addSemanticRecord = () => {
+  if (!newSemanticRecord.value.tgt_table_name || 
+      !newSemanticRecord.value.tgt_column_name || 
+      !newSemanticRecord.value.tgt_physical_datatype ||
+      !newSemanticRecord.value.semantic_field) {
+    return
+  }
+  
+  semanticRecords.value.push({ ...newSemanticRecord.value })
+  cancelAddSemantic()
+}
+
+const cancelAddSemantic = () => {
+  showAddSemantic.value = false
+  newSemanticRecord.value = {
+    tgt_table_name: '',
+    tgt_column_name: '',
+    tgt_physical_datatype: '',
+    tgt_nullable: 'NO',
+    tgt_comments: '',
+    semantic_field: ''
   }
 }
 
-const getAnalysisStatusSeverity = (status: string) => {
-  switch (status) {
-    case 'analyzed': return 'success'
-    case 'pending': return 'info'
-    case 'failed': return 'danger'
-    default: return 'secondary'
+const editSemanticRecord = (record: any) => {
+  console.log('Edit semantic record:', record)
+}
+
+const deleteSemanticRecord = (record: any) => {
+  console.log('Delete semantic record:', record)
+  const index = semanticRecords.value.findIndex(r => 
+    r.tgt_table_name === record.tgt_table_name &&
+    r.tgt_column_name === record.tgt_column_name
+  )
+  if (index > -1) {
+    semanticRecords.value.splice(index, 1)
   }
 }
 
-const getMappingTypeSeverity = (type: string) => {
-  switch (type) {
-    case 'AI_SUGGESTION': return 'info'
-    case 'MANUAL': return 'secondary'
-    case 'TEMPLATE': return 'success'
-    default: return 'secondary'
-  }
+const downloadTemplate = () => {
+  console.log('Download template')
+  // Create CSV template
+  const csvContent = 'src_table_name,src_column_name,src_column_physical_name,src_nullable,src_physical_datatype,src_comments\n'
+  const blob = new Blob([csvContent], { type: 'text/csv' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'mapping_template.csv'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
-const getStatusSeverity = (status: string) => {
-  switch (status) {
-    case 'VALIDATED': return 'success'
-    case 'PENDING': return 'info'
-    case 'REJECTED': return 'danger'
-    default: return 'secondary'
-  }
+const uploadTemplate = (event: any) => {
+  console.log('Upload template:', event)
+  showTemplateUpload.value = false
 }
 
 onMounted(() => {
-  console.log('Mapping view with dummy data loaded')
+  console.log('Source-to-Target Mapping view loaded (matching original app structure)')
 })
 </script>
 
@@ -928,58 +944,6 @@ onMounted(() => {
   color: var(--gainwell-primary);
 }
 
-/* Statistics Grid */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.stat-card {
-  text-align: center;
-  background: var(--gainwell-bg-primary);
-  border: 1px solid var(--gainwell-border);
-  border-radius: var(--p-border-radius);
-  box-shadow: var(--p-card-shadow);
-  transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.stat-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  position: relative;
-  padding: 1.5rem;
-}
-
-.stat-value {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--gainwell-primary);
-  line-height: 1;
-}
-
-.stat-label {
-  color: var(--gainwell-text-secondary);
-  font-weight: 500;
-}
-
-.stat-icon {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 2.5rem;
-  color: var(--gainwell-bg-secondary);
-  opacity: 0.6;
-}
-
 /* Table Controls */
 .table-controls {
   display: flex;
@@ -989,52 +953,120 @@ onMounted(() => {
   padding: 1rem;
   background: var(--gainwell-bg-light);
   border-radius: 8px;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.search-controls {
+.search-controls, .action-controls {
   display: flex;
   gap: 0.75rem;
   align-items: center;
   flex-wrap: wrap;
 }
 
-/* Table Styling */
-.table-name {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+/* Field Detail Section */
+.field-detail-section {
+  margin-top: 2rem;
 }
 
-.table-name strong, .column-info strong {
+.field-detail-card {
+  background: var(--gainwell-bg-primary);
+  border: 1px solid var(--gainwell-border);
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-header h3 {
+  margin: 0;
   color: var(--gainwell-primary);
 }
 
-.table-name small, .column-info small {
-  color: var(--gainwell-text-secondary);
-  font-size: 0.8rem;
+.field-metadata {
+  margin-bottom: 2rem;
 }
 
-.column-info {
+.metadata-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.metadata-item {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.progress-container {
+.metadata-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.metadata-item label {
+  font-weight: 600;
+  color: var(--gainwell-text-primary);
+  font-size: 0.9rem;
+}
+
+/* AI Mapping Section */
+.ai-mapping-section, .manual-search-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--gainwell-bg-light);
+  border-radius: 8px;
+  border: 1px solid var(--gainwell-border);
+}
+
+.section-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header h4 {
+  margin: 0;
+  color: var(--gainwell-primary);
+}
+
+.ai-config {
+  margin-bottom: 1.5rem;
+}
+
+.config-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: end;
+}
+
+.config-item {
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
-.progress-text {
+.config-item.full-width {
+  flex: 1;
+}
+
+.config-item label {
+  font-weight: 600;
+  color: var(--gainwell-text-primary);
+  font-size: 0.9rem;
+}
+
+/* Results styling */
+.description-text, .reasoning-text, .semantic-text {
+  max-width: 300px;
+  white-space: normal;
+  word-wrap: break-word;
   font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.confidence-score {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  color: var(--gainwell-text-secondary);
+  line-height: 1.4;
 }
 
 .action-buttons {
@@ -1042,69 +1074,35 @@ onMounted(() => {
   gap: 0.5rem;
 }
 
-.reasoning-text {
-  max-width: 250px;
-  white-space: normal;
-  word-wrap: break-word;
-  font-size: 0.875rem;
-  color: var(--gainwell-text-secondary);
+/* Dialog styling */
+.upload-section ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
 }
 
-/* Dialog Styling */
-.mapping-detail {
+.upload-section li {
+  margin-bottom: 0.5rem;
+}
+
+.semantic-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-.detail-section h4 {
-  color: var(--gainwell-primary);
-  margin-bottom: 1rem;
-}
-
-.detail-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--gainwell-border);
-}
-
-.detail-item label {
-  font-weight: 600;
-  color: var(--gainwell-text-primary);
-}
-
-.mapping-metadata {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.metadata-item {
+.semantic-form .field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.metadata-item label {
+.semantic-form label {
   font-weight: 600;
   color: var(--gainwell-text-primary);
 }
 
-.validation-notes h4 {
-  color: var(--gainwell-primary);
-  margin-bottom: 0.5rem;
-}
-
-.validation-notes p {
-  color: var(--gainwell-text-secondary);
-  line-height: 1.5;
+/* Semantic Management */
+.semantic-management {
+  /* Additional styling for semantic table management */
 }
 </style>

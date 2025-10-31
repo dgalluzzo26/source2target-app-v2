@@ -663,3 +663,7 @@ INFO 2025-10-31 01:37:25,677 config 43110 6126579712 loading DEFAULT profile fro
 ERROR 2025-10-31 01:37:26,486 views 43110 6126579712 Error getting current user: type object 'Role' has no attribute 'PLATFORM_USER'
 ERROR 2025-10-31 01:37:26,487 log 43110 6126579712 Internal Server Error: /api/accounts/current-user/
 ERROR 2025-10-31 01:37:26,487 basehttp 43110 6126579712 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 01:43:18,453 config 43110 6126579712 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 01:43:19,098 views 43110 6126579712 Error getting current user: type object 'Role' has no attribute 'PLATFORM_USER'
+ERROR 2025-10-31 01:43:19,098 log 43110 6126579712 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 01:43:19,098 basehttp 43110 6126579712 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
