@@ -53,39 +53,39 @@
 
     <!-- Main Content Tabs -->
     <TabView>
-          <!-- Source Tables Tab -->
-          <TabPanel header="Source Tables">
-            <div class="table-controls">
-              <div class="search-controls">
-                <IconField iconPosition="left">
-                  <InputIcon class="pi pi-search" />
-                  <InputText
-                    v-model="tableSearch"
-                    placeholder="Search tables..."
-                    @input="searchTables"
-                  />
-                </IconField>
-                <Button
-                  icon="pi pi-refresh"
-                  @click="loadSourceTables"
-                  :loading="loading.tables"
-                  severity="secondary"
-                />
-                <Button
-                  icon="pi pi-cloud-download"
-                  label="Discover from Databricks"
-                  @click="showDiscoveryDialog = true"
-                  severity="info"
-                />
-                <Button
-                  icon="pi pi-link"
-                  label="Test Connection"
-                  @click="testConnection"
-                  :loading="loading.connection"
-                  severity="help"
-                />
-              </div>
-            </div>
+      <!-- Source Tables Tab -->
+      <TabPanel header="Source Tables">
+        <div class="table-controls">
+          <div class="search-controls">
+            <IconField iconPosition="left">
+              <InputIcon class="pi pi-search" />
+              <InputText
+                v-model="tableSearch"
+                placeholder="Search tables..."
+                @input="searchTables"
+              />
+            </IconField>
+            <Button
+              icon="pi pi-refresh"
+              @click="loadSourceTables"
+              :loading="loading.tables"
+              severity="secondary"
+            />
+            <Button
+              icon="pi pi-cloud-download"
+              label="Discover from Databricks"
+              @click="showDiscoveryDialog = true"
+              severity="info"
+            />
+            <Button
+              icon="pi pi-link"
+              label="Test Connection"
+              @click="testConnection"
+              :loading="loading.connection"
+              severity="help"
+            />
+          </div>
+        </div>
 
         <DataTable 
           :value="sourceTables" 
