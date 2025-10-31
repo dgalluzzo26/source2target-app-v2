@@ -1,0 +1,8 @@
+INFO 2025-10-31 00:04:29,480 autoreload 32932 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:07:47,373 autoreload 32932 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/settings.py changed, reloading.
+INFO 2025-10-31 00:07:47,617 autoreload 33252 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:09:44,075 autoreload 33252 8539578688 /Users/david.galluzzo/source2target-app-v2/mapping/models.py changed, reloading.
+INFO 2025-10-31 00:09:44,336 autoreload 33364 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:15:17,553 autoreload 33364 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/urls.py changed, reloading.
+INFO 2025-10-31 00:15:17,811 autoreload 33627 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:23:28,205 autoreload 33627 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/wsgi.py changed, reloading.

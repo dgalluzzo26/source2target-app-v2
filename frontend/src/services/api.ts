@@ -214,26 +214,181 @@ export class AdminAPI {
   }
 }
 
-// Mapping APIs (placeholder for future implementation)
+// Mapping APIs
 export class MappingAPI {
-  static async getTables() {
-    // TODO: Implement when mapping endpoints are ready
-    throw new Error('Mapping API endpoints not yet implemented')
+  static async getSourceTables(params?: {
+    page?: number
+    search?: string
+    catalog_name?: string
+    schema_name?: string
+    table_type?: string
+  }) {
+    const response = await apiClient.get('/mapping/source-tables/', { params })
+    return response.data
   }
 
-  static async getColumns(tableName: string) {
-    // TODO: Implement when mapping endpoints are ready
-    throw new Error('Mapping API endpoints not yet implemented')
+  static async getSourceTable(tableId: number) {
+    const response = await apiClient.get(`/mapping/source-tables/${tableId}/`)
+    return response.data
   }
 
-  static async getMappings() {
-    // TODO: Implement when mapping endpoints are ready
-    throw new Error('Mapping API endpoints not yet implemented')
+  static async getTableColumns(tableId: number) {
+    const response = await apiClient.get(`/mapping/source-tables/${tableId}/columns/`)
+    return response.data
   }
 
-  static async createMapping(mappingData: any) {
-    // TODO: Implement when mapping endpoints are ready
-    throw new Error('Mapping API endpoints not yet implemented')
+  static async getTableMappings(tableId: number) {
+    const response = await apiClient.get(`/mapping/source-tables/${tableId}/mappings/`)
+    return response.data
+  }
+
+  static async analyzeTable(tableId: number) {
+    const response = await apiClient.post(`/mapping/source-tables/${tableId}/analyze/`)
+    return response.data
+  }
+
+  static async getTargetSchemas(params?: {
+    page?: number
+    search?: string
+    schema_type?: string
+  }) {
+    const response = await apiClient.get('/mapping/target-schemas/', { params })
+    return response.data
+  }
+
+  static async getTargetSchema(schemaId: number) {
+    const response = await apiClient.get(`/mapping/target-schemas/${schemaId}/`)
+    return response.data
+  }
+
+  static async getSchemaFields(schemaId: number) {
+    const response = await apiClient.get(`/mapping/target-schemas/${schemaId}/fields/`)
+    return response.data
+  }
+
+  static async getFieldMappings(params?: {
+    page?: number
+    search?: string
+    mapping_type?: string
+    status?: string
+    suggested_by_ai?: boolean
+    is_validated?: boolean
+  }) {
+    const response = await apiClient.get('/mapping/field-mappings/', { params })
+    return response.data
+  }
+
+  static async createFieldMapping(mappingData: {
+    source_column: number
+    target_field: number
+    mapping_type?: string
+    transformation_logic?: string
+    transformation_language?: string
+    confidence_score?: number
+    suggested_by_ai?: boolean
+    ai_reasoning?: string
+    ai_model_version?: string
+  }) {
+    const response = await apiClient.post('/mapping/field-mappings/', mappingData)
+    return response.data
+  }
+
+  static async updateFieldMapping(mappingId: number, mappingData: any) {
+    const response = await apiClient.patch(`/mapping/field-mappings/${mappingId}/`, mappingData)
+    return response.data
+  }
+
+  static async deleteFieldMapping(mappingId: number) {
+    const response = await apiClient.delete(`/mapping/field-mappings/${mappingId}/`)
+    return response.data
+  }
+
+  static async validateMapping(mappingId: number, validationNotes?: string) {
+    const response = await apiClient.post(`/mapping/field-mappings/${mappingId}/validate_mapping/`, {
+      validation_notes: validationNotes
+    })
+    return response.data
+  }
+
+  static async bulkCreateMappings(mappingsData: {
+    mappings: Array<{
+      source_column_id: number
+      target_field_id: number
+      mapping_type?: string
+      transformation_logic?: string
+    }>
+    template_id?: number
+    auto_validate?: boolean
+  }) {
+    const response = await apiClient.post('/mapping/field-mappings/bulk_create/', mappingsData)
+    return response.data
+  }
+
+  static async getAISuggestions(params?: {
+    page?: number
+    search?: string
+    status?: string
+    model_name?: string
+  }) {
+    const response = await apiClient.get('/mapping/ai-suggestions/', { params })
+    return response.data
+  }
+
+  static async acceptAISuggestion(suggestionId: number) {
+    const response = await apiClient.post(`/mapping/ai-suggestions/${suggestionId}/accept/`)
+    return response.data
+  }
+
+  static async rejectAISuggestion(suggestionId: number, feedback?: string) {
+    const response = await apiClient.post(`/mapping/ai-suggestions/${suggestionId}/reject/`, {
+      feedback
+    })
+    return response.data
+  }
+
+  static async getMappingTemplates(params?: {
+    page?: number
+    search?: string
+    target_schema?: number
+  }) {
+    const response = await apiClient.get('/mapping/templates/', { params })
+    return response.data
+  }
+
+  static async applyTemplate(templateId: number) {
+    const response = await apiClient.post(`/mapping/templates/${templateId}/apply/`)
+    return response.data
+  }
+
+  static async getMappingSessions(params?: {
+    page?: number
+    search?: string
+    status?: string
+    target_schema?: number
+  }) {
+    const response = await apiClient.get('/mapping/sessions/', { params })
+    return response.data
+  }
+
+  static async createMappingSession(sessionData: {
+    session_name: string
+    source_tables: number[]
+    target_schema: number
+    notes?: string
+    tags?: string[]
+  }) {
+    const response = await apiClient.post('/mapping/sessions/', sessionData)
+    return response.data
+  }
+
+  static async updateSessionProgress(sessionId: number) {
+    const response = await apiClient.post(`/mapping/sessions/${sessionId}/update_progress/`)
+    return response.data
+  }
+
+  static async getMappingStats() {
+    const response = await apiClient.get('/mapping/stats/')
+    return response.data
   }
 }
 

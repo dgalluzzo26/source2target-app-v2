@@ -69,12 +69,13 @@ A modern Vue.js + Django implementation of the Gainwell Source-to-Target mapping
 
 2. **Install dependencies**
    ```bash
+   cd backend
    pip install -r requirements.txt
    ```
 
 3. **Configure environment**
    ```bash
-   cp env.template .env
+   cp ../env.template .env
    # Edit .env file with your settings
    ```
 
@@ -114,15 +115,21 @@ source2target-app-v2/
 │   │   ├── views/           # Page components
 │   │   ├── stores/          # Pinia state management
 │   │   ├── router/          # Vue Router configuration
+│   │   ├── services/        # API service layer
 │   │   └── assets/          # Static assets
 │   ├── package.json
 │   └── vite.config.ts
-├── backend/                  # Django project configuration
-├── accounts/                 # User authentication & management
-├── mapping/                  # Field mapping functionality
-├── config_manager/           # Configuration management
-├── manage.py                 # Django management script
-├── requirements.txt          # Python dependencies
+├── backend/                  # Django REST API backend
+│   ├── accounts/            # User authentication & management
+│   ├── mapping/             # Field mapping functionality
+│   │   ├── services/        # Databricks integration services
+│   │   └── management/      # Django management commands
+│   ├── config_manager/      # Configuration management
+│   ├── manage.py            # Django management script
+│   ├── requirements.txt     # Python dependencies
+│   ├── settings.py          # Django configuration
+│   └── urls.py              # URL routing
+├── backend_env/             # Python virtual environment
 ├── env.template             # Environment configuration template
 └── README.md
 ```

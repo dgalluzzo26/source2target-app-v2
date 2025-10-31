@@ -65,7 +65,7 @@ urlpatterns = [
     
     # App URLs
     path('api/accounts/', include('accounts.urls', namespace='accounts')),
-    # path('api/mapping/', include('mapping.urls', namespace='mapping')),  # We'll add this next
+    path('api/mapping/', include('mapping.urls', namespace='mapping')),
     # path('api/config/', include('config_manager.urls', namespace='config')),  # We'll add this next
 ]
 
