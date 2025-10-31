@@ -587,3 +587,38 @@ INFO 2025-10-31 01:08:52,442 config 38719 6147633152 loading DEFAULT profile fro
 ERROR 2025-10-31 01:08:52,974 views 38719 6147633152 Error getting current user: no such table: auth_user
 ERROR 2025-10-31 01:08:52,975 log 38719 6147633152 Internal Server Error: /api/accounts/current-user/
 ERROR 2025-10-31 01:08:52,975 basehttp 38719 6147633152 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 01:14:37,703 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 01:14:38,349 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 01:14:38,350 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 01:14:38,350 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 01:14:39,507 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 01:14:40,020 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 01:14:40,021 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 01:14:40,021 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 01:17:03,259 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 01:17:03,880 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 01:17:03,881 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 01:17:03,881 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 01:21:00,542 config 38719 6130233344 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 01:21:01,129 views 38719 6130233344 Error getting current user: no such table: auth_user
+ERROR 2025-10-31 01:21:01,130 log 38719 6130233344 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 01:21:01,130 basehttp 38719 6130233344 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 01:21:09,751 basehttp 38719 6147633152 "GET /api/docs/swagger/ HTTP/1.1" 200 4675
+INFO 2025-10-31 01:21:09,897 basehttp 38719 6147633152 "GET /api/docs/schema/ HTTP/1.1" 200 219099
+INFO 2025-10-31 01:22:32,833 autoreload 38719 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/settings.py changed, reloading.
+INFO 2025-10-31 01:22:33,303 autoreload 42550 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 01:22:33,880 databricks_service 42550 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 01:22:43,368 autoreload 42550 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/urls.py changed, reloading.
+INFO 2025-10-31 01:22:43,768 autoreload 42558 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 01:22:44,352 databricks_service 42558 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 01:22:51,742 databricks_service 42572 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 01:23:02,167 autoreload 42558 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/configuration/urls.py changed, reloading.
+INFO 2025-10-31 01:23:02,584 autoreload 42578 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 01:23:03,163 databricks_service 42578 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 01:23:08,403 databricks_service 42592 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 01:23:14,207 databricks_service 42615 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 01:24:00,363 databricks_service 42677 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 01:24:17,303 config 42578 6165180416 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 01:24:17,918 views 42578 6165180416 Error getting current user: type object 'Role' has no attribute 'PLATFORM_USER'
+ERROR 2025-10-31 01:24:17,919 log 42578 6165180416 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 01:24:17,919 basehttp 42578 6165180416 "GET /api/accounts/current-user/ HTTP/1.1" 500 65

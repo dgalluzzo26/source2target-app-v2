@@ -423,6 +423,95 @@ export class ConfigAPI {
 }
 
 // Error handling utility
+// Configuration APIs
+export class ConfigurationAPI {
+  static async getFullConfiguration() {
+    const response = await apiClient.get('/config/settings/full/')
+    return response.data
+  }
+
+  static async getConfigurationBySection(section: string) {
+    const response = await apiClient.get('/config/settings/by_section/', {
+      params: { section }
+    })
+    return response.data
+  }
+
+  static async updateSetting(section: string, key: string, value: any, reason?: string) {
+    const response = await apiClient.post('/config/settings/update_setting/', {
+      section,
+      key,
+      value,
+      reason
+    })
+    return response.data
+  }
+
+  static async bulkUpdateConfiguration(configuration: any, reason?: string) {
+    const response = await apiClient.post('/config/settings/bulk_update/', {
+      configuration,
+      reason
+    })
+    return response.data
+  }
+
+  static async testConfiguration(testType: string, configuration?: any) {
+    const response = await apiClient.post('/config/settings/test/', {
+      test_type: testType,
+      configuration
+    })
+    return response.data
+  }
+
+  static async exportConfiguration(includeSections?: string[], format = 'json') {
+    const response = await apiClient.post('/config/settings/export/', {
+      include_sections: includeSections,
+      format
+    }, {
+      responseType: 'blob'
+    })
+    return response.data
+  }
+
+  static async importConfiguration(configurationData: any, mergeStrategy = 'merge', reason?: string) {
+    const response = await apiClient.post('/config/settings/import_config/', {
+      configuration_data: configurationData,
+      merge_strategy: mergeStrategy,
+      reason
+    })
+    return response.data
+  }
+
+  static async resetToDefaults() {
+    const response = await apiClient.post('/config/settings/reset_defaults/')
+    return response.data
+  }
+
+  static async getConfigurationTemplates() {
+    const response = await apiClient.get('/config/templates/')
+    return response.data
+  }
+
+  static async createConfigurationTemplate(name: string, description: string, configurationData: any) {
+    const response = await apiClient.post('/config/templates/', {
+      name,
+      description,
+      configuration_data: configurationData
+    })
+    return response.data
+  }
+
+  static async applyConfigurationTemplate(templateId: number) {
+    const response = await apiClient.post(`/config/templates/${templateId}/apply/`)
+    return response.data
+  }
+
+  static async getConfigurationHistory(params?: any) {
+    const response = await apiClient.get('/config/history/', { params })
+    return response.data
+  }
+}
+
 export const handleApiError = (error: any) => {
   if (error.response) {
     // Server responded with error status
