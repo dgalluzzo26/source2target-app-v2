@@ -1,1 +1,27 @@
 INFO 2025-10-31 00:24:20,444 autoreload 34390 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:25:28,574 autoreload 34390 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/views.py changed, reloading.
+INFO 2025-10-31 00:25:28,817 autoreload 34473 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 00:30:01,621 autoreload 34473 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:30:01,930 autoreload 36455 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:30:07,696 databricks_service 36455 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:30:11,949 autoreload 36455 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:30:12,292 autoreload 36471 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:30:12,826 databricks_service 36471 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:30:21,267 autoreload 36471 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:30:21,668 autoreload 36475 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:30:22,201 databricks_service 36475 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:30:34,841 autoreload 36475 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:30:35,206 autoreload 36486 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:30:35,727 databricks_service 36486 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:30:43,123 autoreload 36486 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:30:43,498 autoreload 36490 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:30:44,033 databricks_service 36490 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:30:52,453 autoreload 36490 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:30:52,796 autoreload 36494 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:30:53,316 databricks_service 36494 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:30:58,619 autoreload 36494 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:30:58,968 autoreload 36500 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:30:59,493 databricks_service 36500 8539578688 Databricks credentials not configured
+WARNING 2025-10-31 00:31:05,413 databricks_service 36514 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:31:11,614 autoreload 36564 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:31:12,097 databricks_service 36564 8539578688 Databricks credentials not configured

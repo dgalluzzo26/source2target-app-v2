@@ -31,6 +31,8 @@ from .serializers import (
     AIMappingSerializer, MappingTemplateSerializer, MappingSessionSerializer,
     BulkMappingSerializer, MappingStatsSerializer
 )
+from .services.databricks_service import databricks_service, DatabricksConnectionError
+from .services.discovery_service import discovery_service
 
 
 class SourceTableViewSet(viewsets.ModelViewSet):
@@ -103,7 +105,7 @@ class SourceTableViewSet(viewsets.ModelViewSet):
         mappings = FieldMapping.objects.filter(source_column__table=table)
         serializer = FieldMappingSerializer(mappings, many=True)
         return Response(serializer.data)
-    
+
     @extend_schema(
         summary="Analyze table",
         description="Trigger analysis of table structure and statistics",
@@ -111,21 +113,102 @@ class SourceTableViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def analyze(self, request, pk=None):
         table = self.get_object()
-        
-        # TODO: Implement actual table analysis with Databricks
-        table.analysis_status = 'analyzing'
-        table.last_analyzed = timezone.now()
-        table.save()
-        
-        # This would normally trigger a background task
-        # For now, we'll just mark it as completed
-        table.analysis_status = 'completed'
-        table.save()
-        
-        return Response({
-            'message': f'Analysis started for table {table.full_table_name}',
-            'status': table.analysis_status
-        })
+
+        try:
+            # Update table analysis status
+            table.analysis_status = 'analyzing'
+            table.last_analyzed = timezone.now()
+            table.save()
+
+            # Refresh table statistics using Databricks service
+            success = discovery_service.refresh_table_statistics(table)
+            
+            if success:
+                return Response({
+                    'message': f'Analysis completed for table {table.full_table_name}',
+                    'status': table.analysis_status
+                })
+            else:
+                return Response({
+                    'message': f'Analysis failed for table {table.full_table_name}',
+                    'status': table.analysis_status
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        except Exception as e:
+            table.analysis_status = 'failed'
+            table.save()
+            return Response({
+                'error': f'Analysis failed: {str(e)}',
+                'status': table.analysis_status
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @extend_schema(
+        summary="Discover tables from Databricks",
+        description="Discover and sync tables from Databricks catalogs",
+        parameters=[
+            OpenApiParameter('catalogs', OpenApiTypes.STR, description='Comma-separated list of catalogs to search'),
+            OpenApiParameter('search', OpenApiTypes.STR, description='Search term for table names'),
+        ]
+    )
+    @action(detail=False, methods=['post'])
+    def discover(self, request):
+        """Discover tables from Databricks and sync them to the database."""
+        try:
+            catalogs = request.data.get('catalogs')
+            search_term = request.data.get('search')
+            
+            if catalogs:
+                catalogs = [cat.strip() for cat in catalogs.split(',')]
+            
+            if search_term:
+                # Search for specific tables
+                stats = discovery_service.search_and_sync_tables(
+                    request.user, search_term, catalogs
+                )
+            else:
+                # Discover all tables in specified catalogs
+                stats = discovery_service.discover_all_tables(request.user, catalogs)
+            
+            return Response({
+                'message': 'Table discovery completed',
+                'stats': stats
+            })
+            
+        except DatabricksConnectionError as e:
+            return Response({
+                'error': f'Databricks connection failed: {str(e)}'
+            }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        except Exception as e:
+            logger.error(f"Table discovery failed: {e}")
+            return Response({
+                'error': f'Discovery failed: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @extend_schema(
+        summary="Test Databricks connection",
+        description="Test the connection to Databricks services",
+    )
+    @action(detail=False, methods=['get'])
+    def test_connection(self, request):
+        """Test Databricks connection."""
+        try:
+            connection_status = databricks_service.test_connection()
+            
+            if connection_status['overall_status']:
+                return Response({
+                    'message': 'Databricks connection successful',
+                    'details': connection_status
+                })
+            else:
+                return Response({
+                    'message': 'Databricks connection failed',
+                    'details': connection_status
+                }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+                
+        except Exception as e:
+            return Response({
+                'error': f'Connection test failed: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class TargetSchemaViewSet(viewsets.ModelViewSet):

@@ -247,6 +247,19 @@ export class MappingAPI {
     return response.data
   }
 
+  static async discoverTables(params?: {
+    catalogs?: string
+    search?: string
+  }) {
+    const response = await apiClient.post('/mapping/source-tables/discover/', params)
+    return response.data
+  }
+
+  static async testDatabricksConnection() {
+    const response = await apiClient.get('/mapping/source-tables/test_connection/')
+    return response.data
+  }
+
   static async getTargetSchemas(params?: {
     page?: number
     search?: string

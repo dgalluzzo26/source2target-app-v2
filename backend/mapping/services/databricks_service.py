@@ -13,10 +13,31 @@ import logging
 from typing import List, Dict, Any, Optional, Tuple
 from django.conf import settings
 from django.utils import timezone
-from databricks.sdk import WorkspaceClient
-from databricks.sdk.service.catalog import TableInfo, ColumnInfo
-import databricks.sql as sql
-import pandas as pd
+
+# Try to import Databricks dependencies with graceful fallback
+try:
+    from databricks.sdk import WorkspaceClient
+    from databricks.sdk.service.catalog import TableInfo, ColumnInfo
+    DATABRICKS_SDK_AVAILABLE = True
+except ImportError:
+    WorkspaceClient = None
+    TableInfo = None
+    ColumnInfo = None
+    DATABRICKS_SDK_AVAILABLE = False
+
+try:
+    import databricks.sql as sql
+    DATABRICKS_SQL_AVAILABLE = True
+except ImportError:
+    sql = None
+    DATABRICKS_SQL_AVAILABLE = False
+
+try:
+    import pandas as pd
+    PANDAS_AVAILABLE = True
+except ImportError:
+    pd = None
+    PANDAS_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +60,11 @@ class DatabricksService:
     def _initialize_clients(self):
         """Initialize Databricks clients."""
         try:
+            # Check if Databricks SDK is available
+            if not DATABRICKS_SDK_AVAILABLE:
+                logger.warning("Databricks SDK not available. Install 'databricks-sdk' to enable Databricks integration.")
+                return
+            
             # Initialize Workspace Client for Unity Catalog operations
             if settings.DATABRICKS_HOST and settings.DATABRICKS_TOKEN:
                 self.workspace_client = WorkspaceClient(
@@ -56,6 +82,9 @@ class DatabricksService:
     def get_sql_connection(self):
         """Get a SQL connection to Databricks."""
         try:
+            if not DATABRICKS_SQL_AVAILABLE:
+                raise DatabricksConnectionError("Databricks SQL connector not available. Install 'databricks-sql-connector' to enable SQL connections.")
+            
             if not all([settings.DATABRICKS_HOST, settings.DATABRICKS_TOKEN, settings.DATABRICKS_HTTP_PATH]):
                 raise DatabricksConnectionError("Databricks SQL connection parameters not configured")
             
@@ -75,9 +104,18 @@ class DatabricksService:
     def test_connection(self) -> Dict[str, Any]:
         """Test the Databricks connection."""
         try:
+            # Check if dependencies are available
+            if not DATABRICKS_SDK_AVAILABLE and not DATABRICKS_SQL_AVAILABLE:
+                return {
+                    'workspace_client': False,
+                    'sql_connection': False,
+                    'overall_status': False,
+                    'error': 'Databricks dependencies not installed. Install databricks-sdk and databricks-sql-connector.'
+                }
+            
             # Test workspace client
             workspace_status = False
-            if self.workspace_client:
+            if DATABRICKS_SDK_AVAILABLE and self.workspace_client:
                 try:
                     # Try to list catalogs as a connection test
                     list(self.workspace_client.catalogs.list())
@@ -87,19 +125,22 @@ class DatabricksService:
             
             # Test SQL connection
             sql_status = False
-            try:
-                with self.get_sql_connection() as conn:
-                    cursor = conn.cursor()
-                    cursor.execute("SELECT 1")
-                    cursor.fetchone()
-                    sql_status = True
-            except Exception as e:
-                logger.warning(f"SQL connection test failed: {e}")
+            if DATABRICKS_SQL_AVAILABLE:
+                try:
+                    with self.get_sql_connection() as conn:
+                        cursor = conn.cursor()
+                        cursor.execute("SELECT 1")
+                        cursor.fetchone()
+                        sql_status = True
+                except Exception as e:
+                    logger.warning(f"SQL connection test failed: {e}")
             
             return {
                 'workspace_client': workspace_status,
                 'sql_connection': sql_status,
-                'overall_status': workspace_status and sql_status
+                'overall_status': workspace_status and sql_status,
+                'sdk_available': DATABRICKS_SDK_AVAILABLE,
+                'sql_available': DATABRICKS_SQL_AVAILABLE
             }
             
         except Exception as e:
@@ -111,9 +152,17 @@ class DatabricksService:
                 'error': str(e)
             }
     
+    def _check_dependencies(self, require_sdk: bool = True, require_sql: bool = False):
+        """Check if required dependencies are available."""
+        if require_sdk and not DATABRICKS_SDK_AVAILABLE:
+            raise DatabricksConnectionError("Databricks SDK not available. Install 'databricks-sdk' to enable Unity Catalog operations.")
+        if require_sql and not DATABRICKS_SQL_AVAILABLE:
+            raise DatabricksConnectionError("Databricks SQL connector not available. Install 'databricks-sql-connector' to enable SQL operations.")
+    
     def discover_catalogs(self) -> List[Dict[str, Any]]:
         """Discover available catalogs."""
         try:
+            self._check_dependencies(require_sdk=True)
             if not self.workspace_client:
                 raise DatabricksConnectionError("Workspace client not available")
             
@@ -351,9 +400,13 @@ class DatabricksService:
                 'sample_values': []
             }
     
-    def execute_query(self, query: str) -> pd.DataFrame:
+    def execute_query(self, query: str):
         """Execute a SQL query and return results as DataFrame."""
         try:
+            self._check_dependencies(require_sql=True)
+            if not PANDAS_AVAILABLE:
+                raise DatabricksConnectionError("Pandas not available. Install 'pandas' to enable DataFrame operations.")
+            
             with self.get_sql_connection() as conn:
                 df = pd.read_sql(query, conn)
                 logger.info(f"Query executed successfully, returned {len(df)} rows")
@@ -364,7 +417,7 @@ class DatabricksService:
             raise DatabricksConnectionError(f"Query execution failed: {e}")
     
     def get_table_sample(self, catalog_name: str, schema_name: str, table_name: str, 
-                        limit: int = 100) -> pd.DataFrame:
+                        limit: int = 100):
         """Get a sample of data from a table."""
         try:
             full_table_name = f"{catalog_name}.{schema_name}.{table_name}"

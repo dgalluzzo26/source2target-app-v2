@@ -53,26 +53,39 @@
 
     <!-- Main Content Tabs -->
     <TabView>
-      <!-- Source Tables Tab -->
-      <TabPanel header="Source Tables">
-        <div class="table-controls">
-          <div class="search-controls">
-            <IconField iconPosition="left">
-              <InputIcon class="pi pi-search" />
-              <InputText 
-                v-model="tableSearch" 
-                placeholder="Search tables..."
-                @input="searchTables"
-              />
-            </IconField>
-            <Button 
-              icon="pi pi-refresh" 
-              @click="loadSourceTables"
-              :loading="loading.tables"
-              severity="secondary"
-            />
-          </div>
-        </div>
+          <!-- Source Tables Tab -->
+          <TabPanel header="Source Tables">
+            <div class="table-controls">
+              <div class="search-controls">
+                <IconField iconPosition="left">
+                  <InputIcon class="pi pi-search" />
+                  <InputText
+                    v-model="tableSearch"
+                    placeholder="Search tables..."
+                    @input="searchTables"
+                  />
+                </IconField>
+                <Button
+                  icon="pi pi-refresh"
+                  @click="loadSourceTables"
+                  :loading="loading.tables"
+                  severity="secondary"
+                />
+                <Button
+                  icon="pi pi-cloud-download"
+                  label="Discover from Databricks"
+                  @click="showDiscoveryDialog = true"
+                  severity="info"
+                />
+                <Button
+                  icon="pi pi-link"
+                  label="Test Connection"
+                  @click="testConnection"
+                  :loading="loading.connection"
+                  severity="help"
+                />
+              </div>
+            </div>
 
         <DataTable 
           :value="sourceTables" 
@@ -348,10 +361,111 @@
             </template>
           </Column>
         </DataTable>
-      </TabPanel>
-    </TabView>
-  </div>
-</template>
+            </TabPanel>
+          </TabView>
+
+          <!-- Discovery Dialog -->
+          <Dialog 
+            v-model:visible="showDiscoveryDialog" 
+            modal 
+            header="Discover Tables from Databricks"
+            :style="{ width: '50rem' }"
+          >
+            <div class="discovery-form">
+              <div class="field">
+                <label for="catalogs">Catalogs (comma-separated, leave empty for all):</label>
+                <InputText 
+                  id="catalogs"
+                  v-model="discoveryForm.catalogs" 
+                  placeholder="e.g., catalog1, catalog2"
+                  class="w-full"
+                />
+              </div>
+              
+              <div class="field">
+                <label for="search">Search Term (optional):</label>
+                <InputText 
+                  id="search"
+                  v-model="discoveryForm.search" 
+                  placeholder="Search for specific table names"
+                  class="w-full"
+                />
+              </div>
+
+              <div class="discovery-warning">
+                <Message severity="warn" :closable="false">
+                  <strong>Note:</strong> Discovery may take several minutes for large catalogs. 
+                  This will scan Databricks Unity Catalog and sync table metadata to the platform.
+                </Message>
+              </div>
+            </div>
+
+            <template #footer>
+              <Button 
+                label="Cancel" 
+                icon="pi pi-times" 
+                @click="showDiscoveryDialog = false" 
+                severity="secondary"
+              />
+              <Button 
+                label="Start Discovery" 
+                icon="pi pi-cloud-download" 
+                @click="startDiscovery" 
+                :loading="loading.discovery"
+                severity="info"
+              />
+            </template>
+          </Dialog>
+
+          <!-- Discovery Results Dialog -->
+          <Dialog 
+            v-model:visible="showDiscoveryResults" 
+            modal 
+            header="Discovery Results"
+            :style="{ width: '40rem' }"
+          >
+            <div class="discovery-results" v-if="discoveryResults">
+              <div class="results-summary">
+                <h4>Discovery Completed Successfully!</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Tables Found:</span>
+                    <span class="stat-value">{{ discoveryResults.stats.tables_discovered || 0 }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Tables Created:</span>
+                    <span class="stat-value">{{ discoveryResults.stats.tables_created || 0 }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Tables Updated:</span>
+                    <span class="stat-value">{{ discoveryResults.stats.tables_updated || 0 }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Columns Created:</span>
+                    <span class="stat-value">{{ discoveryResults.stats.columns_created || 0 }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="discoveryResults.stats.errors && discoveryResults.stats.errors.length > 0" class="errors-section">
+                <h5>Errors Encountered:</h5>
+                <ul class="error-list">
+                  <li v-for="error in discoveryResults.stats.errors" :key="error">{{ error }}</li>
+                </ul>
+              </div>
+            </div>
+
+            <template #footer>
+              <Button 
+                label="Close" 
+                icon="pi pi-check" 
+                @click="closeDiscoveryResults" 
+                severity="success"
+              />
+            </template>
+          </Dialog>
+        </div>
+      </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
@@ -368,7 +482,9 @@ const loading = ref({
   stats: false,
   tables: false,
   mappings: false,
-  suggestions: false
+  suggestions: false,
+  discovery: false,
+  connection: false
 })
 
 // Search and filters
@@ -390,6 +506,15 @@ const statusOptions = [
   { label: 'Approved', value: 'approved' },
   { label: 'Rejected', value: 'rejected' }
 ]
+
+// Discovery dialog state
+const showDiscoveryDialog = ref(false)
+const showDiscoveryResults = ref(false)
+const discoveryForm = ref({
+  catalogs: '',
+  search: ''
+})
+const discoveryResults = ref<any>(null)
 
 // Methods
 const loadMappingStats = async () => {
@@ -522,6 +647,59 @@ const rejectSuggestion = async (suggestionId: number) => {
   }
 }
 
+const testConnection = async () => {
+  loading.value.connection = true
+  try {
+    const result = await MappingAPI.testDatabricksConnection()
+    // Show success message
+    console.log('Connection test successful:', result)
+    // You could add a toast notification here
+  } catch (error) {
+    console.error('Connection test failed:', error)
+    // You could add an error toast notification here
+  } finally {
+    loading.value.connection = false
+  }
+}
+
+const startDiscovery = async () => {
+  loading.value.discovery = true
+  try {
+    const params: any = {}
+    if (discoveryForm.value.catalogs.trim()) {
+      params.catalogs = discoveryForm.value.catalogs.trim()
+    }
+    if (discoveryForm.value.search.trim()) {
+      params.search = discoveryForm.value.search.trim()
+    }
+
+    const result = await MappingAPI.discoverTables(params)
+    discoveryResults.value = result
+    showDiscoveryDialog.value = false
+    showDiscoveryResults.value = true
+    
+    // Reload tables to show newly discovered ones
+    loadSourceTables()
+    loadMappingStats()
+    
+  } catch (error) {
+    console.error('Discovery failed:', error)
+    // You could add an error toast notification here
+  } finally {
+    loading.value.discovery = false
+  }
+}
+
+const closeDiscoveryResults = () => {
+  showDiscoveryResults.value = false
+  discoveryResults.value = null
+  // Reset discovery form
+  discoveryForm.value = {
+    catalogs: '',
+    search: ''
+  }
+}
+
 // Utility functions
 const getTableTypeSeverity = (type: string) => {
   const severityMap: Record<string, string> = {
@@ -575,6 +753,87 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.discovery-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-weight: 600;
+  color: var(--p-text-color);
+}
+
+.discovery-warning {
+  margin-top: 1rem;
+}
+
+.discovery-results {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.results-summary h4 {
+  color: var(--p-green-500);
+  margin-bottom: 1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--p-surface-100);
+  border-radius: var(--p-border-radius);
+  border-left: 4px solid var(--p-primary-color);
+}
+
+.stat-label {
+  font-weight: 500;
+  color: var(--p-text-muted-color);
+}
+
+.stat-value {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--p-primary-color);
+}
+
+.errors-section {
+  margin-top: 1rem;
+}
+
+.errors-section h5 {
+  color: var(--p-red-500);
+  margin-bottom: 0.5rem;
+}
+
+.error-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.error-list li {
+  padding: 0.5rem;
+  background: var(--p-red-50);
+  border-left: 4px solid var(--p-red-500);
+  margin-bottom: 0.5rem;
+  border-radius: var(--p-border-radius);
+  color: var(--p-red-700);
+}</style>
 .mapping-view {
   max-width: 1400px;
   margin: 0 auto;
