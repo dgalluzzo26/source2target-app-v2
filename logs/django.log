@@ -25,3 +25,22 @@ WARNING 2025-10-31 00:30:59,493 databricks_service 36500 8539578688 Databricks c
 WARNING 2025-10-31 00:31:05,413 databricks_service 36514 8539578688 Databricks credentials not configured
 INFO 2025-10-31 00:31:11,614 autoreload 36564 8539578688 Watching for file changes with StatReloader
 WARNING 2025-10-31 00:31:12,097 databricks_service 36564 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:31:48,785 autoreload 36500 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/wsgi.py changed, reloading.
+INFO 2025-10-31 00:31:49,117 autoreload 36642 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:31:49,617 databricks_service 36642 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:34:21,081 autoreload 36642 8539578688 /Users/david.galluzzo/source2target-app-v2/backend_env/lib/python3.14/site-packages/pandas/plotting/_misc.py changed, reloading.
+INFO 2025-10-31 00:34:21,483 autoreload 37084 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:34:26,205 databricks_service 37084 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:34:36,717 autoreload 37084 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/settings.py changed, reloading.
+INFO 2025-10-31 00:34:37,152 autoreload 37109 8539578688 Watching for file changes with StatReloader
+WARNING 2025-10-31 00:34:37,717 databricks_service 37109 8539578688 Databricks credentials not configured
+INFO 2025-10-31 00:35:13,341 autoreload 37109 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:35:13,779 autoreload 37131 8539578688 Watching for file changes with StatReloader
+ERROR 2025-10-31 00:35:14,525 databricks_service 37131 8539578688 Failed to initialize Databricks clients: default auth: cannot configure default credentials, please check https://docs.databricks.com/en/dev-tools/auth.html#databricks-client-unified-authentication to configure credentials for your preferred authentication method. Config: host=https://Acuity-oz-test-ue1.cloud.databricks.com
+WARNING 2025-10-31 00:35:14,525 databricks_service 37131 8539578688 Databricks integration will not be available
+INFO 2025-10-31 00:35:23,991 autoreload 37131 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/mapping/services/databricks_service.py changed, reloading.
+INFO 2025-10-31 00:35:24,433 autoreload 37139 8539578688 Watching for file changes with StatReloader
+ERROR 2025-10-31 00:35:25,017 databricks_service 37139 8539578688 Failed to initialize Databricks clients: default auth: cannot configure default credentials, please check https://docs.databricks.com/en/dev-tools/auth.html#databricks-client-unified-authentication to configure credentials for your preferred authentication method. Config: host=https://Acuity-oz-test-ue1.cloud.databricks.com
+WARNING 2025-10-31 00:35:25,017 databricks_service 37139 8539578688 Databricks integration will not be available
+ERROR 2025-10-31 00:35:30,288 databricks_service 37153 8539578688 Failed to initialize Databricks clients: default auth: cannot configure default credentials, please check https://docs.databricks.com/en/dev-tools/auth.html#databricks-client-unified-authentication to configure credentials for your preferred authentication method. Config: host=https://Acuity-oz-test-ue1.cloud.databricks.com
+WARNING 2025-10-31 00:35:30,288 databricks_service 37153 8539578688 Databricks integration will not be available

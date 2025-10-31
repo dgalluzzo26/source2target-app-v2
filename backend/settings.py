@@ -196,15 +196,25 @@ SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
 
-# Databricks Configuration
-DATABRICKS_HOST = config('DATABRICKS_HOST', default='')
+# Databricks Configuration (from original app config)
+DATABRICKS_HOST = config('DATABRICKS_HOST', default='https://Acuity-oz-test-ue1.cloud.databricks.com')
 DATABRICKS_TOKEN = config('DATABRICKS_TOKEN', default='')
-DATABRICKS_HTTP_PATH = config('DATABRICKS_HTTP_PATH', default='')
+DATABRICKS_HTTP_PATH = config('DATABRICKS_HTTP_PATH', default='/sql/1.0/warehouses/173ea239ed13be7d')
 DATABRICKS_CLUSTER_ID = config('DATABRICKS_CLUSTER_ID', default='')
 
-# AI Model Configuration
-AI_MODEL_ENDPOINT = config('AI_MODEL_ENDPOINT', default='')
-VECTOR_SEARCH_INDEX = config('VECTOR_SEARCH_INDEX', default='')
+# Database Configuration (from original app)
+DATABRICKS_WAREHOUSE_NAME = config('DATABRICKS_WAREHOUSE_NAME', default='gia-oztest-dev-data-warehouse')
+DATABRICKS_MAPPING_TABLE = config('DATABRICKS_MAPPING_TABLE', default='oztest_dev.source_to_target.mappings')
+DATABRICKS_SEMANTIC_TABLE = config('DATABRICKS_SEMANTIC_TABLE', default='oztest_dev.source_to_target.silver_semantic_full')
+
+# AI Model Configuration (from original app)
+AI_MODEL_ENDPOINT = config('AI_MODEL_ENDPOINT', default='databricks-meta-llama-3-3-70b-instruct')
+VECTOR_SEARCH_INDEX = config('VECTOR_SEARCH_INDEX', default='oztest_dev.source_to_target.silver_semantic_full_vs')
+VECTOR_SEARCH_ENDPOINT = config('VECTOR_SEARCH_ENDPOINT', default='s2t_vsendpoint')
+PREVIOUS_MAPPINGS_TABLE = config('PREVIOUS_MAPPINGS_TABLE', default='oztest_dev.source_to_target.train_with_comments')
+
+# Security Configuration (from original app)
+DATABRICKS_ADMIN_GROUP = config('DATABRICKS_ADMIN_GROUP', default='gia-oztest-dev-ue1-data-engineers')
 
 # Celery Configuration for background tasks
 CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://localhost:6379/0')

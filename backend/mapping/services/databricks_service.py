@@ -66,18 +66,27 @@ class DatabricksService:
                 return
             
             # Initialize Workspace Client for Unity Catalog operations
-            if settings.DATABRICKS_HOST and settings.DATABRICKS_TOKEN:
-                self.workspace_client = WorkspaceClient(
-                    host=settings.DATABRICKS_HOST,
-                    token=settings.DATABRICKS_TOKEN
-                )
-                logger.info("Databricks Workspace Client initialized successfully")
+            if settings.DATABRICKS_HOST:
+                if settings.DATABRICKS_TOKEN:
+                    # Use token authentication if provided
+                    self.workspace_client = WorkspaceClient(
+                        host=settings.DATABRICKS_HOST,
+                        token=settings.DATABRICKS_TOKEN
+                    )
+                    logger.info("Databricks Workspace Client initialized with token authentication")
+                else:
+                    # Use default authentication (Databricks CLI, environment variables, etc.)
+                    self.workspace_client = WorkspaceClient(
+                        host=settings.DATABRICKS_HOST
+                    )
+                    logger.info("Databricks Workspace Client initialized with default authentication")
             else:
-                logger.warning("Databricks credentials not configured")
+                logger.warning("Databricks host not configured")
                 
         except Exception as e:
             logger.error(f"Failed to initialize Databricks clients: {e}")
-            raise DatabricksConnectionError(f"Failed to connect to Databricks: {e}")
+            # Don't raise exception here, just log the error so the app can still start
+            logger.warning("Databricks integration will not be available")
     
     def get_sql_connection(self):
         """Get a SQL connection to Databricks."""
@@ -85,14 +94,26 @@ class DatabricksService:
             if not DATABRICKS_SQL_AVAILABLE:
                 raise DatabricksConnectionError("Databricks SQL connector not available. Install 'databricks-sql-connector' to enable SQL connections.")
             
-            if not all([settings.DATABRICKS_HOST, settings.DATABRICKS_TOKEN, settings.DATABRICKS_HTTP_PATH]):
+            if not settings.DATABRICKS_HOST or not settings.DATABRICKS_HTTP_PATH:
                 raise DatabricksConnectionError("Databricks SQL connection parameters not configured")
             
-            connection = sql.connect(
-                server_hostname=settings.DATABRICKS_HOST.replace('https://', ''),
-                http_path=settings.DATABRICKS_HTTP_PATH,
-                access_token=settings.DATABRICKS_TOKEN
-            )
+            # Use the same connection approach as the original app
+            if settings.DATABRICKS_TOKEN:
+                # Use token authentication if provided
+                connection = sql.connect(
+                    server_hostname=settings.DATABRICKS_HOST.replace('https://', ''),
+                    http_path=settings.DATABRICKS_HTTP_PATH,
+                    access_token=settings.DATABRICKS_TOKEN
+                )
+            else:
+                # Use default authentication (similar to original app's Config().authenticate)
+                from databricks.sdk.core import Config
+                config = Config(host=settings.DATABRICKS_HOST)
+                connection = sql.connect(
+                    server_hostname=settings.DATABRICKS_HOST.replace('https://', ''),
+                    http_path=settings.DATABRICKS_HTTP_PATH,
+                    credentials_provider=lambda: config.authenticate
+                )
             
             logger.info("Databricks SQL connection established")
             return connection
