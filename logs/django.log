@@ -622,3 +622,37 @@ INFO 2025-10-31 01:24:17,303 config 42578 6165180416 loading DEFAULT profile fro
 ERROR 2025-10-31 01:24:17,918 views 42578 6165180416 Error getting current user: type object 'Role' has no attribute 'PLATFORM_USER'
 ERROR 2025-10-31 01:24:17,919 log 42578 6165180416 Internal Server Error: /api/accounts/current-user/
 ERROR 2025-10-31 01:24:17,919 basehttp 42578 6165180416 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+INFO 2025-10-31 01:26:18,392 config 42578 6165180416 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 01:26:19,010 views 42578 6165180416 Error getting current user: type object 'Role' has no attribute 'PLATFORM_USER'
+ERROR 2025-10-31 01:26:19,011 log 42578 6165180416 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 01:26:19,011 basehttp 42578 6165180416 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+WARNING 2025-10-31 01:26:19,747 log 42578 6165180416 Unauthorized: /api/config/settings/full/
+WARNING 2025-10-31 01:26:19,747 basehttp 42578 6165180416 "GET /api/config/settings/full/ HTTP/1.1" 401 58
+INFO 2025-10-31 01:26:44,049 autoreload 42578 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/settings.py changed, reloading.
+INFO 2025-10-31 01:26:44,484 autoreload 42869 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 01:26:45,033 databricks_service 42869 8539578688 Databricks Workspace Client initialized with token authentication
+WARNING 2025-10-31 01:26:47,832 log 42869 6202863616 Unauthorized: /api/config/settings/full/
+WARNING 2025-10-31 01:26:47,833 basehttp 42869 6202863616 "GET /api/config/settings/full/ HTTP/1.1" 401 58
+INFO 2025-10-31 01:26:47,833 config 42869 6219689984 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 01:26:48,361 views 42869 6219689984 Error getting current user: type object 'Role' has no attribute 'PLATFORM_USER'
+ERROR 2025-10-31 01:26:48,362 log 42869 6219689984 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 01:26:48,362 basehttp 42869 6219689984 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+WARNING 2025-10-31 01:26:48,715 log 42869 6219689984 Unauthorized: /api/config/settings/full/
+WARNING 2025-10-31 01:26:48,717 basehttp 42869 6219689984 "GET /api/config/settings/full/ HTTP/1.1" 401 58
+INFO 2025-10-31 01:26:48,717 config 42869 6202863616 loading DEFAULT profile from ~/.databrickscfg: host, token
+ERROR 2025-10-31 01:26:49,236 views 42869 6202863616 Error getting current user: type object 'Role' has no attribute 'PLATFORM_USER'
+ERROR 2025-10-31 01:26:49,236 log 42869 6202863616 Internal Server Error: /api/accounts/current-user/
+ERROR 2025-10-31 01:26:49,237 basehttp 42869 6202863616 "GET /api/accounts/current-user/ HTTP/1.1" 500 65
+WARNING 2025-10-31 01:27:53,130 log 42869 6202863616 Unauthorized: /api/config/settings/full/
+WARNING 2025-10-31 01:27:53,130 basehttp 42869 6202863616 "GET /api/config/settings/full/ HTTP/1.1" 401 58
+INFO 2025-10-31 01:28:04,851 autoreload 42869 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/configuration/views.py changed, reloading.
+INFO 2025-10-31 01:28:05,342 autoreload 42941 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 01:28:05,901 databricks_service 42941 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 01:28:14,306 autoreload 42941 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/configuration/views.py changed, reloading.
+INFO 2025-10-31 01:28:14,718 autoreload 42949 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 01:28:15,292 databricks_service 42949 8539578688 Databricks Workspace Client initialized with token authentication
+INFO 2025-10-31 01:28:24,776 autoreload 42949 8539578688 /Users/david.galluzzo/source2target-app-v2/backend/configuration/views.py changed, reloading.
+INFO 2025-10-31 01:28:25,222 autoreload 42973 8539578688 Watching for file changes with StatReloader
+INFO 2025-10-31 01:28:25,787 databricks_service 42973 8539578688 Databricks Workspace Client initialized with token authentication
+WARNING 2025-10-31 01:28:35,737 log 42973 6156562432 Unauthorized: /api/config/settings/full/
+WARNING 2025-10-31 01:28:35,737 basehttp 42973 6156562432 "GET /api/config/settings/full/ HTTP/1.1" 401 58
