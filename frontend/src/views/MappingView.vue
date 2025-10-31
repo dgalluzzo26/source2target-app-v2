@@ -361,110 +361,110 @@
             </template>
           </Column>
         </DataTable>
-            </TabPanel>
-          </TabView>
+      </TabPanel>
+    </TabView>
 
-          <!-- Discovery Dialog -->
-          <Dialog 
-            v-model:visible="showDiscoveryDialog" 
-            modal 
-            header="Discover Tables from Databricks"
-            :style="{ width: '50rem' }"
-          >
-            <div class="discovery-form">
-              <div class="field">
-                <label for="catalogs">Catalogs (comma-separated, leave empty for all):</label>
-                <InputText 
-                  id="catalogs"
-                  v-model="discoveryForm.catalogs" 
-                  placeholder="e.g., catalog1, catalog2"
-                  class="w-full"
-                />
-              </div>
-              
-              <div class="field">
-                <label for="search">Search Term (optional):</label>
-                <InputText 
-                  id="search"
-                  v-model="discoveryForm.search" 
-                  placeholder="Search for specific table names"
-                  class="w-full"
-                />
-              </div>
-
-              <div class="discovery-warning">
-                <Message severity="warn" :closable="false">
-                  <strong>Note:</strong> Discovery may take several minutes for large catalogs. 
-                  This will scan Databricks Unity Catalog and sync table metadata to the platform.
-                </Message>
-              </div>
-            </div>
-
-            <template #footer>
-              <Button 
-                label="Cancel" 
-                icon="pi pi-times" 
-                @click="showDiscoveryDialog = false" 
-                severity="secondary"
-              />
-              <Button 
-                label="Start Discovery" 
-                icon="pi pi-cloud-download" 
-                @click="startDiscovery" 
-                :loading="loading.discovery"
-                severity="info"
-              />
-            </template>
-          </Dialog>
-
-          <!-- Discovery Results Dialog -->
-          <Dialog 
-            v-model:visible="showDiscoveryResults" 
-            modal 
-            header="Discovery Results"
-            :style="{ width: '40rem' }"
-          >
-            <div class="discovery-results" v-if="discoveryResults">
-              <div class="results-summary">
-                <h4>Discovery Completed Successfully!</h4>
-                <div class="stats-grid">
-                  <div class="stat-item">
-                    <span class="stat-label">Tables Found:</span>
-                    <span class="stat-value">{{ discoveryResults.stats.tables_discovered || 0 }}</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-label">Tables Created:</span>
-                    <span class="stat-value">{{ discoveryResults.stats.tables_created || 0 }}</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-label">Tables Updated:</span>
-                    <span class="stat-value">{{ discoveryResults.stats.tables_updated || 0 }}</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-label">Columns Created:</span>
-                    <span class="stat-value">{{ discoveryResults.stats.columns_created || 0 }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div v-if="discoveryResults.stats.errors && discoveryResults.stats.errors.length > 0" class="errors-section">
-                <h5>Errors Encountered:</h5>
-                <ul class="error-list">
-                  <li v-for="error in discoveryResults.stats.errors" :key="error">{{ error }}</li>
-                </ul>
-              </div>
-            </div>
-
-            <template #footer>
-              <Button 
-                label="Close" 
-                icon="pi pi-check" 
-                @click="closeDiscoveryResults" 
-                severity="success"
-              />
-            </template>
-          </Dialog>
+    <!-- Discovery Dialog -->
+    <Dialog 
+      v-model:visible="showDiscoveryDialog" 
+      modal 
+      header="Discover Tables from Databricks"
+      :style="{ width: '50rem' }"
+    >
+      <div class="discovery-form">
+        <div class="field">
+          <label for="catalogs">Catalogs (comma-separated, leave empty for all):</label>
+          <InputText 
+            id="catalogs"
+            v-model="discoveryForm.catalogs" 
+            placeholder="e.g., catalog1, catalog2"
+            class="w-full"
+          />
         </div>
+        
+        <div class="field">
+          <label for="search">Search Term (optional):</label>
+          <InputText 
+            id="search"
+            v-model="discoveryForm.search" 
+            placeholder="Search for specific table names"
+            class="w-full"
+          />
+        </div>
+
+        <div class="discovery-warning">
+          <Message severity="warn" :closable="false">
+            <strong>Note:</strong> Discovery may take several minutes for large catalogs. 
+            This will scan Databricks Unity Catalog and sync table metadata to the platform.
+          </Message>
+        </div>
+      </div>
+
+      <template #footer>
+        <Button 
+          label="Cancel" 
+          icon="pi pi-times" 
+          @click="showDiscoveryDialog = false" 
+          severity="secondary"
+        />
+        <Button 
+          label="Start Discovery" 
+          icon="pi pi-cloud-download" 
+          @click="startDiscovery" 
+          :loading="loading.discovery"
+          severity="info"
+        />
+      </template>
+    </Dialog>
+
+    <!-- Discovery Results Dialog -->
+    <Dialog 
+      v-model:visible="showDiscoveryResults" 
+      modal 
+      header="Discovery Results"
+      :style="{ width: '40rem' }"
+    >
+      <div class="discovery-results" v-if="discoveryResults">
+        <div class="results-summary">
+          <h4>Discovery Completed Successfully!</h4>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">Tables Found:</span>
+              <span class="stat-value">{{ discoveryResults.stats.tables_discovered || 0 }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Tables Created:</span>
+              <span class="stat-value">{{ discoveryResults.stats.tables_created || 0 }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Tables Updated:</span>
+              <span class="stat-value">{{ discoveryResults.stats.tables_updated || 0 }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Columns Created:</span>
+              <span class="stat-value">{{ discoveryResults.stats.columns_created || 0 }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="discoveryResults.stats.errors && discoveryResults.stats.errors.length > 0" class="errors-section">
+          <h5>Errors Encountered:</h5>
+          <ul class="error-list">
+            <li v-for="error in discoveryResults.stats.errors" :key="error">{{ error }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <template #footer>
+        <Button 
+          label="Close" 
+          icon="pi pi-check" 
+          @click="closeDiscoveryResults" 
+          severity="success"
+        />
+      </template>
+    </Dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
